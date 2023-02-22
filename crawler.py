@@ -90,8 +90,11 @@ class Crawler:
         It takes a sitemap URL, downloads the sitemap, parses it, and returns a list of URLs
         """
         sitemap_url = self.check_sitemap_consistency(self.get_robots_txt())
-        print(sitemap_url)
-
+        urls_from_sitemap = self.try_request(sitemap_url)
+        soup = BeautifulSoup(urls_from_sitemap.text, 'lxml')
+        root = fromstring(str(soup.contents[1]))
+        sub_sitemap = (root.xpath("//loc[contains(text(),'posts')]"))
+        return sub_sitemap
 
     def crawl_one_site(self, site):
         """
