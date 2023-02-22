@@ -1,6 +1,10 @@
 #  date: 21. 2. 2023
 #  author: Daniel Schnurpfeil
 #
+import time
+from concurrent.futures import ThreadPoolExecutor
+from functools import partial
+
 from crawler import Crawler
 from utils import make_output_dir
 
@@ -13,3 +17,15 @@ if __name__ == '__main__':
                       )
     crawler.get_sitemap_url()
 
+#     with ThreadPoolExecutor(max_workers = 8) as execut:
+#         pass
+#
+#
+# def do_work(sleep_secs: float, i: int) -> str:
+#     time.sleep(sleep_secs)
+#     return f"foo-{i}"
+#
+#
+# def do_more_concurrent_work(executor: ThreadPoolExecutor) -> None:
+#             results_gen = executor.map(partial(do_work, 1.0), range(10, 20))
+#             print("more map results: ", list(results_gen))
