@@ -3,10 +3,13 @@
 #
 import os
 import time
+from copy import copy
 
+import numpy as np
 from bs4 import BeautifulSoup
 from lxml.html.soupparser import fromstring
 import requests
+from numpy import fromstring as np_fromstring
 from requests import Response
 
 
@@ -34,6 +37,8 @@ class Crawler:
         :param url: The URL to request
         """
         response = requests.get(url)
+        # Checking if the response status code is 429, which means that the server is too busy. If it is, it waits
+        #         for the amount of time specified in the Retry-After header.
         if response.status_code == 429:
             time.sleep(int(response.headers["Retry-After"]))
         if response.status_code == 200:
@@ -50,29 +55,31 @@ class Crawler:
         if self.robots_txt in os.listdir(self.output_dir):
             with open(self.output_dir + "/" + self.robots_txt) as f:
                 return f.readlines()
-                # todo check self.main_site in robots
         else:
             return self.save_robots()
 
-    def save_robots(self) -> str:
+    def save_robots(self) -> list:
         """
         This function saves the robots.txt file to the output directory
-        :return: The robots.txt str
+        :return: The robots.txt list
         """
         robots = self.try_request(self.main_site + self.robots_txt).text
         with open(self.output_dir + "/" + self.robots_txt, mode="w") as out_writer:
-            out_writer.writelines(robots)
+            out_writer.writelines(copy(robots))
+        robots = robots.split("\n")
         return robots
 
-    def get_sitemap_url(self):
+    def check_sitemap_consistency(self, robots: list) -> str:
         """
-        It takes the robots.txt file, reverses it, and then looks for the first line that contains "Sitemap:" and the main
-        site name
+        It takes a list of strings (robots) and returns a string (sitemap_url) if the main_site is in the list of strings
+
+        :param robots: list
+        :type robots: list
         :return: The sitemap url
         """
-        robots = self.get_robots_txt()
         robots.reverse()
         for i in robots:
+            # It checks if the main_site is in the robots.txt file.
             if "Sitemap:" in i and self.main_site in i:
                 sitemap_url = i.replace("Sitemap: ", "")
                 sitemap_url = sitemap_url.strip()
@@ -82,8 +89,9 @@ class Crawler:
         """
         It takes a sitemap URL, downloads the sitemap, parses it, and returns a list of URLs
         """
-        pass
-    # todo
+        sitemap_url = self.check_sitemap_consistency(self.get_robots_txt())
+        print(sitemap_url)
+
 
     def crawl_one_site(self, site):
         """
