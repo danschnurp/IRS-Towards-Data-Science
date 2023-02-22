@@ -96,6 +96,10 @@ class Crawler:
         sub_sitemap = (root.xpath("//loc[contains(text(),'posts')]"))
         return sub_sitemap
 
+    def get_urls_from_sub_sitemap(self):
+        pass
+        # todo load all html sites to front
+
     def crawl_one_site(self, site):
         """
         It takes a site, requests it, parses it, and then prints the title and the text of the paragraphs.
