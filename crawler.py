@@ -141,7 +141,7 @@ class Crawler:
 
         with open(self.output_dir + "/urls_to_crawl.txt", mode="r", encoding="utf-8") as reader:
             self.html_sites = reader.readlines()
-            self.html_sites.sort()
+            random.shuffle(self.html_sites)
 
         if not len(self.html_sites) > 0:
             raise Exception("Empty list with html sites!")
@@ -149,7 +149,7 @@ class Crawler:
         for index, site in enumerate(self.html_sites):
             title, text_content = self.crawl_one_site(site)
             print(title)
-            with open(self.output_dir + "/crawled_content.txt", mode="a") as out_writer:
+            with open(self.output_dir + "/crawled_content.txt", mode="a", encoding="utf-8") as out_writer:
                 out_writer.writelines("\n" + str(index) + ")" + "\n")
                 out_writer.writelines(' '.join(title) + "\n\n")
                 out_writer.writelines(' '.join(text_content) + "\n\n")
@@ -159,6 +159,7 @@ class Crawler:
         It takes a site, requests it, parses it, and then prints the title and the text of the paragraphs.
         :param site: the url of the site to be crawled
         """
+        site = site.strip()
         print("crawling:", site)
         soup = BeautifulSoup(self.try_request(site).text, 'lxml')
         root = fromstring(str(soup.contents[1]))
