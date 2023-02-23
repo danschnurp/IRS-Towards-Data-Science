@@ -10,6 +10,7 @@ if __name__ == '__main__':
     # prefetch data:
     # https://onedrive.live.com/?authkey=%21AEbCCIE3TCHcckA&id=8D9B8AAC1B2B5597%2185064&cid=8D9B8AAC1B2B5597&parId=root&parQt=sharedby&o=OneUp
     # on my onedrive
+    # extract to "./crawled_data"
     prepared_output_dir = make_output_dir()
     crawler = Crawler(prepared_output_dir,
                       # main_site=
