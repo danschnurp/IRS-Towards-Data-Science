@@ -13,7 +13,7 @@ if __name__ == '__main__':
                       # "https://towardsdatascience.com/"
                       # "5-signs-youve-become-an-advanced-pythonista-without-even-realizing-it-2b1dd7ef57f3"
                       )
-    crawler.html_sites = crawler.get_urls_from_sitemap()
+    # crawler.html_sites = crawler.get_urls_from_sitemap()
     crawler.crawl_all_sites()
 
 
