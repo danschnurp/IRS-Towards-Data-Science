@@ -5,11 +5,9 @@ import os
 import time
 from copy import copy
 
-import numpy as np
 from bs4 import BeautifulSoup
 from lxml.html.soupparser import fromstring
 import requests
-from numpy import fromstring as np_fromstring
 from requests import Response
 
 
