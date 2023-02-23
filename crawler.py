@@ -139,12 +139,14 @@ class Crawler:
         """
         # Checking if the list of html sites is empty, and if it is, it raises an exception.
 
-        with open(self.output_dir + "/urls_to_crawl.txt", mode="r", encoding="utf-8") as reader:
-            self.html_sites = reader.readlines()
-            random.shuffle(self.html_sites)
+        if self.output_dir + "/urls_to_crawl.txt" in os.listdir(self.output_dir):
 
-        if not len(self.html_sites) > 0:
-            raise Exception("Empty list with html sites!")
+            with open(self.output_dir + "/urls_to_crawl.txt", mode="r+", encoding="utf-8") as reader:
+                self.html_sites = reader.readlines()
+                random.shuffle(self.html_sites)
+
+            if not len(self.html_sites) > 0:
+                raise Exception("Empty list with html sites!")
 
         for index, site in enumerate(self.html_sites):
             title, text_content = self.crawl_one_site(site)
