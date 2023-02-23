@@ -105,11 +105,20 @@ class Crawler:
         sitemap_url = self.check_sitemap_consistency(self.get_robots_txt())
         print(sitemap_url)
         sub_sitemaps = self.get_urls_from_sitemap_by_xpath(sitemap_url)
-        print(sub_sitemaps)
 
-        # html_sites = []
-        # for sub_sitemap_url in sub_sitemaps:
-        #     html_sites.append(sub_sitemap_url, )
+        html_sites = []
+        t1 = time.time()
+        with open(self.output_dir + "/urls_to_crawl.txt", mode="w") as out_writer:
+            for index, sub_sitemap_url in enumerate(sub_sitemaps):
+                sites = self.get_urls_from_sitemap_by_xpath(sub_sitemap_url.text,
+                                                            "//loc[contains(text(),'" + self.main_site + "')]")
+                for site in sites:
+                    html_sites.append(site.text)
+                    out_writer.writelines(str(site.text + "\n"))
+                    if index % 25 == 0:
+                        print("amount prepared urls:", len(html_sites), "elapsed time:", time.time() - t1, "s")
+
+        print(html_sites)
 
     def crawl_one_site(self, site):
         """
