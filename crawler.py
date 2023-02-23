@@ -2,6 +2,7 @@
 #  author: Daniel Schnurpfeil
 #
 import os
+import random
 import time
 from copy import copy
 
@@ -43,7 +44,7 @@ class Crawler:
         if response.status_code == 200:
             return response
         else:
-            raise ConnectionError
+            raise ConnectionError(response)
 
     def get_robots_txt(self):
         """
@@ -111,7 +112,7 @@ class Crawler:
 
         t1 = time.time()
         # Checking if the file exists, and if it does, it returns the contents of the file.
-        with open(self.output_dir + "/urls_to_crawl.txt") as in_file:
+        with open(self.output_dir + "/urls_to_crawl.txt", mode="a+") as in_file:
             html_sites = in_file.readlines()
         if len(html_sites) > 0:
             return html_sites
@@ -119,7 +120,7 @@ class Crawler:
         html_sites = []
 
         # Opening a file, and then writing the urls to the file.
-        with open(self.output_dir + "/urls_to_crawl.txt", mode="w") as out_writer:
+        with open(self.output_dir + "/urls_to_crawl.txt", mode="w", encoding="utf-8") as out_writer:
             # Iterating through the sub_sitemaps, and then getting the urls from the sub_sitemaps.
             for index, sub_sitemap_url in enumerate(sub_sitemaps):
                 sites = self.get_urls_from_sitemap_by_xpath(sub_sitemap_url.text,
@@ -137,20 +138,28 @@ class Crawler:
         It crawls all cached the sites.
         """
         # Checking if the list of html sites is empty, and if it is, it raises an exception.
+
+        with open(self.output_dir + "/urls_to_crawl.txt", mode="r", encoding="utf-8") as reader:
+            self.html_sites = reader.readlines()
+            self.html_sites.sort()
+
         if not len(self.html_sites) > 0:
             raise Exception("Empty list with html sites!")
-        with open(self.output_dir + "/crawled_content.txt", mode="w") as out_writer:
-            for site in self.html_sites:
-                title, text_content = self.crawl_one_site(site)
-                out_writer.writelines()
 
-    #             todo
+        for index, site in enumerate(self.html_sites):
+            title, text_content = self.crawl_one_site(site)
+            print(title)
+            with open(self.output_dir + "/crawled_content.txt", mode="a") as out_writer:
+                out_writer.writelines("\n" + str(index) + ")" + "\n")
+                out_writer.writelines(' '.join(title) + "\n\n")
+                out_writer.writelines(' '.join(text_content) + "\n\n")
 
     def crawl_one_site(self, site) -> tuple:
         """
         It takes a site, requests it, parses it, and then prints the title and the text of the paragraphs.
         :param site: the url of the site to be crawled
         """
+        print("crawling:", site)
         soup = BeautifulSoup(self.try_request(site).text, 'lxml')
         root = fromstring(str(soup.contents[1]))
 
