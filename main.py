@@ -1,9 +1,7 @@
 #  date: 21. 2. 2023
 #  author: Daniel Schnurpfeil
 #
-import time
-from concurrent.futures import ThreadPoolExecutor
-from functools import partial
+
 
 from crawler import Crawler
 from utils import make_output_dir
@@ -22,9 +20,9 @@ if __name__ == '__main__':
 
     # print(crawler.crawl_one_site("https://towardsdatascience.com/linear-algebra-cheat-sheet-for-deep-learning-cd67aba4526c"))
 
-
-
-
+# import time
+# from concurrent.futures import ThreadPoolExecutor
+# from functools import partial
 
 #     with ThreadPoolExecutor(max_workers = 8) as execut:
 #         pass
