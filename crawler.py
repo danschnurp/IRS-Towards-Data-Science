@@ -85,20 +85,33 @@ class Crawler:
                 sitemap_url = sitemap_url.strip()
                 return sitemap_url
 
-    def get_urls_from_sitemap(self):
+    def get_urls_from_sitemap_by_xpath(self,
+                                       sitemap_url: str,
+                                       xpath="//loc[contains(text(),'posts')]"):
         """
-        It takes a sitemap URL, downloads the sitemap, parses it, and returns a list of URLs
+        It takes a sitemap URL, downloads the sitemap, parses it, and returns a list of URLs that match the given XPath
+
+        :param sitemap_url: url of sitemap
+        :param xpath: The xpath to the element
+               that contains the URL, defaults to //loc[contains(text(),'posts')] (optional)
+        :return: A list of urls
         """
-        sitemap_url = self.check_sitemap_consistency(self.get_robots_txt())
         urls_from_sitemap = self.try_request(sitemap_url)
         soup = BeautifulSoup(urls_from_sitemap.text, 'lxml')
         root = fromstring(str(soup.contents[1]))
-        sub_sitemap = (root.xpath("//loc[contains(text(),'posts')]"))
+        sub_sitemap = (root.xpath(xpath))
         return sub_sitemap
 
-    def get_urls_from_sub_sitemap(self):
-        pass
-        # todo load all html sites to front
+    def get_urls_from_sitemap(self):
+
+        sitemap_url = self.check_sitemap_consistency(self.get_robots_txt())
+        print(sitemap_url)
+        sub_sitemaps = self.get_urls_from_sitemap_by_xpath(sitemap_url)
+        print(sub_sitemaps)
+
+        # html_sites = []
+        # for sub_sitemap_url in sub_sitemaps:
+        #     html_sites.append(sub_sitemap_url, )
 
     def crawl_one_site(self, site):
         """
