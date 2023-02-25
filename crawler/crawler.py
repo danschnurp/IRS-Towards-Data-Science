@@ -12,7 +12,6 @@ import requests
 from requests import Response
 
 
-# Crawler is a class that crawls a website.
 class Crawler:
 
     def __init__(self, output_dir: str, main_site="https://towardsdatascience.com/", robots_txt="robots.txt"):
@@ -20,7 +19,6 @@ class Crawler:
         This function initializes the Crawler class by setting the output directory, main site, and robots.txt file.
 
         :param output_dir: The directory where the scraped data will be stored
-        :type output_dir: str
         :param main_site: The main site that you want to scrape, defaults to https://towardsdatascience.com/ (optional)
         :param robots_txt: The name of the robots.txt file, defaults to robots.txt (optional)
         """
@@ -73,7 +71,7 @@ class Crawler:
         """
         It takes a list of strings (robots) and returns a string (sitemap_url) if the main_site is in the list of strings
 
-        :param robots: list
+        :param robots: list of lines of content of robots.txt
         :type robots: list
         :return: The sitemap url
         """

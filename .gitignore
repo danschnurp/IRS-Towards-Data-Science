@@ -128,4 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-crawled_data/
+crawler/crawled_data/
