@@ -3,13 +3,13 @@
 #
 import os
 import random
+import sys
 import time
 from copy import copy
 
 from bs4 import BeautifulSoup
 from lxml.html.soupparser import fromstring
-import requests
-from requests import Response
+from requests import Response, get
 
 
 class Crawler:
@@ -28,21 +28,22 @@ class Crawler:
         self.html_sites = []
 
     @staticmethod
-    def try_request(url) -> Response:
+    def try_request(url) -> str:
         """
         It tries to make a request to the given url, and returns the response
 
         :param url: The URL to request
         """
-        response = requests.get(url)
+        response = get(url)
         # Checking if the response status code is 429, which means that the server is too busy. If it is, it waits
         #         for the amount of time specified in the Retry-After header.
         if response.status_code == 429:
             time.sleep(int(response.headers["Retry-After"]))
         if response.status_code == 200:
-            return response
+            return response.text
         else:
-            raise ConnectionError(response)
+            print(ConnectionError(response), file=sys.stderr)
+            return ""
 
     def get_robots_txt(self):
         """
@@ -61,7 +62,7 @@ class Crawler:
         This function saves the robots.txt file to the output directory
         :return: The robots.txt list
         """
-        robots = self.try_request(self.main_site + self.robots_txt).text
+        robots = self.try_request(self.main_site + self.robots_txt)
         with open(self.output_dir + "/" + self.robots_txt, mode="w") as out_writer:
             out_writer.writelines(copy(robots))
         robots = robots.split("\n")
@@ -95,12 +96,12 @@ class Crawler:
         :return: A list of urls
         """
         urls_from_sitemap = self.try_request(sitemap_url)
-        soup = BeautifulSoup(urls_from_sitemap.text, 'lxml')
+        soup = BeautifulSoup(urls_from_sitemap, 'lxml')
         root = fromstring(str(soup.contents[1]))
         sub_sitemap = (root.xpath(xpath))
         return sub_sitemap
 
-    def get_urls_from_sitemap(self) -> list:
+    def get_urls_from_sitemap(self):
         """
         > This function gets the urls from a sitemap and saves them to a file
         """
@@ -113,7 +114,8 @@ class Crawler:
         with open(self.output_dir + "/urls_to_crawl.txt", mode="a+") as in_file:
             html_sites = in_file.readlines()
         if len(html_sites) > 0:
-            return html_sites
+            self.html_sites = html_sites
+            return
 
         html_sites = []
 
@@ -122,14 +124,14 @@ class Crawler:
             # Iterating through the sub_sitemaps, and then getting the urls from the sub_sitemaps.
             for index, sub_sitemap_url in enumerate(sub_sitemaps):
                 sites = self.get_urls_from_sitemap_by_xpath(sub_sitemap_url.text,
-                                                            "//loc[contains(text(),'" + self.main_site + "')]")
+                                                            xpath="//loc[contains(text(),'" + self.main_site + "')]")
                 # Iterating through the sites, and then appending the text of the site to the html_sites list.
                 for site in sites:
                     html_sites.append(site.text)
                     out_writer.writelines(str(site.text + "\n"))
                     if index % 25 == 0:
                         print("amount prepared urls:", len(html_sites), "elapsed time:", time.time() - t1, "s")
-        return html_sites
+        self.html_sites = html_sites
 
     def crawl_all_sites(self):
         """
@@ -138,19 +140,20 @@ class Crawler:
         # Checking if the list of html sites is empty, and if it is, it raises an exception.
 
         if "urls_to_crawl.txt" in os.listdir(self.output_dir):
-
             with open(self.output_dir + "/urls_to_crawl.txt", mode="r+", encoding="utf-8") as reader:
                 self.html_sites = reader.readlines()
                 random.shuffle(self.html_sites)
 
         if not len(self.html_sites) > 0:
             raise Exception("Empty list with html sites!")
-
-        for index, site in enumerate(self.html_sites):
-            title, text_content = self.crawl_one_site(site)
-            print(title)
-            with open(self.output_dir + "/crawled_content.txt", mode="a", encoding="utf-8") as out_writer:
-                out_writer.writelines("\n" + str(index) + ")" + "\n")
+        # creates file with timestamp
+        with open(self.output_dir + "/crawled_content" + time.strftime("%Y_%m_%d_%H_%M") + ".txt", mode="a",
+                  encoding="utf-8") as out_writer:
+            # iterating over cached sites can be parallelized
+            for index, site in enumerate(self.html_sites):
+                title, text_content = self.crawl_one_site(site)
+                print(title)
+                out_writer.writelines("\n" + str(index) + ")" + str(hash(' '.join(title))) + "\n")
                 out_writer.writelines(' '.join(title) + "\n\n")
                 out_writer.writelines(' '.join(text_content) + "\n\n")
 
@@ -161,7 +164,7 @@ class Crawler:
         """
         site = site.strip()
         print("crawling:", site)
-        soup = BeautifulSoup(self.try_request(site).text, 'lxml')
+        soup = BeautifulSoup(self.try_request(site), 'lxml')
         root = fromstring(str(soup.contents[1]))
-
+        # gets title and paragraphs
         return root.xpath("//title/text()"), root.xpath("//p/text()")
