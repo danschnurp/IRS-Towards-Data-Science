@@ -1,6 +1,5 @@
 #  date: 21. 2. 2023
 #  author: Daniel Schnurpfeil
-import os
 
 from crawler import Crawler
 from utils import make_output_dir

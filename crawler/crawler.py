@@ -9,7 +9,7 @@ from copy import copy
 
 from bs4 import BeautifulSoup
 from lxml.html.soupparser import fromstring
-from requests import Response, get
+from requests import get
 
 
 class Crawler:
