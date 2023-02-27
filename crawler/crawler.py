@@ -165,6 +165,9 @@ class Crawler:
         site = site.strip()
         print("crawling:", site)
         soup = BeautifulSoup(self.try_request(site), 'lxml')
-        root = fromstring(str(soup.contents[1]))
+        try:
+            root = fromstring(str(soup.contents[1]))
+        except IndexError:
+            return "failed", "no content"
         # gets title and paragraphs
         return root.xpath("//title/text()"), root.xpath("//p/text()")
