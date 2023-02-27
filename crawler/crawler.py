@@ -152,6 +152,9 @@ class Crawler:
             # iterating over cached sites can be parallelized
             for index, site in enumerate(self.html_sites):
                 title, text_content = self.crawl_one_site(site)
+                if title == "failed":
+                    print(site, "failed")
+                    continue
                 print(title)
                 out_writer.writelines("\n" + str(index) + ")" + str(hash(' '.join(title))) + "\n")
                 out_writer.writelines(' '.join(title) + "\n\n")
@@ -167,7 +170,7 @@ class Crawler:
         soup = BeautifulSoup(self.try_request(site), 'lxml')
         try:
             root = fromstring(str(soup.contents[1]))
-        except IndexError:
+        except Exception or IndexError:
             return "failed", "no content"
         # gets title and paragraphs
         return root.xpath("//title/text()"), root.xpath("//p/text()")
