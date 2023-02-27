@@ -9,7 +9,7 @@ from copy import copy
 
 from bs4 import BeautifulSoup
 from lxml.html.soupparser import fromstring
-from requests import get
+from requests import get, exceptions
 
 
 class Crawler:
@@ -37,12 +37,15 @@ class Crawler:
         response = get(url)
         # Checking if the response status code is 429, which means that the server is too busy. If it is, it waits
         #         for the amount of time specified in the Retry-After header.
-        if response.status_code == 429:
-            time.sleep(int(response.headers["Retry-After"]))
-        if response.status_code == 200:
-            return response.text
-        else:
-            print(ConnectionError(response), file=sys.stderr)
+        try:
+            if response.status_code == 429:
+                time.sleep(int(response.headers["Retry-After"]))
+            if response.status_code == 200:
+                return response.text
+            else:
+                print(ConnectionError(response), file=sys.stderr)
+                return ""
+        except Exception:
             return ""
 
     def get_robots_txt(self):
@@ -142,7 +145,6 @@ class Crawler:
         if "urls_to_crawl.txt" in os.listdir(self.output_dir):
             with open(self.output_dir + "/urls_to_crawl.txt", mode="r+", encoding="utf-8") as reader:
                 self.html_sites = reader.readlines()
-                random.shuffle(self.html_sites)
 
         if not len(self.html_sites) > 0:
             raise Exception("Empty list with html sites!")
