@@ -34,10 +34,10 @@ class Crawler:
 
         :param url: The URL to request
         """
-        response = get(url)
+        try:
+            response = get(url)
         # Checking if the response status code is 429, which means that the server is too busy. If it is, it waits
         #         for the amount of time specified in the Retry-After header.
-        try:
             if response.status_code == 429:
                 time.sleep(int(response.headers["Retry-After"]))
             if response.status_code == 200:
