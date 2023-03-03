@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 
 crawled_data/
+preprocessed_data/

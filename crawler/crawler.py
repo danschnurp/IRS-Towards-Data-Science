@@ -158,9 +158,9 @@ class Crawler:
                     print(site, "failed")
                     continue
                 print(title)
-                out_writer.writelines("\n" + str(index) + ")" + str(hash(' '.join(title))) + "\n")
-                out_writer.writelines(' '.join(title) + "\n\n")
-                out_writer.writelines(' '.join(text_content) + "\n\n")
+                out_writer.writelines(str(index) + ")" + str(hash(' '.join(title))) + "\n")
+                out_writer.writelines(' '.join(title) + "\n")
+                out_writer.writelines(' '.join(text_content) + "\n")
 
     def crawl_one_site(self, site) -> tuple:
         """
