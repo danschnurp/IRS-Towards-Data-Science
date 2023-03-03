@@ -94,6 +94,9 @@ if __name__ == '__main__':
 
     # The number of steps that the progress bar will have.
     toolbar_width = 25
+    use_progressbar = True
+    if len(preprocessed_authors) < toolbar_width:
+        use_progressbar = False
 
     # setup toolbar
     sys.stdout.write("[%s]" % (" " * toolbar_width))
@@ -101,11 +104,11 @@ if __name__ == '__main__':
     sys.stdout.write("\b" * (toolbar_width + 1))
     counter = 0
     # Iterating over the titles and contents array and preprocessing each element.
-    for i in range(0,len(df), 3):
-
-        if counter % int((len(preprocessed_authors) / toolbar_width)) == 0:
-            sys.stdout.write("-")
-            sys.stdout.flush()
+    for i in range(0, len(df), 3):
+        if use_progressbar:
+            if counter % int((len(preprocessed_authors) / toolbar_width)) == 0:
+                sys.stdout.write("-")
+                sys.stdout.flush()
         if counter == len(preprocessed_authors):
             break
 
