@@ -1,3 +1,6 @@
+#  date: 3. 3. 2023
+#  author: Daniel Schnurpfeil
+#
 import os
 import sys
 
