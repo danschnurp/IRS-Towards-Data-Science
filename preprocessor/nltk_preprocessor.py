@@ -167,6 +167,7 @@ if __name__ == '__main__':
     t1 = time.time()
     # Preprocessing the data.
     preprocess_all()
+    print()
     print("Data preprocessed in", time.time() - t1, "sec")
 
     # Writing the preprocessed data to a csv file.
