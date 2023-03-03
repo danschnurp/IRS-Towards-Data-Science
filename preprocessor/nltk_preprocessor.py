@@ -3,6 +3,7 @@
 #
 import os
 import sys
+import time
 
 import numpy as np
 from nltk.corpus import stopwords
@@ -23,7 +24,7 @@ def filter_common_sentences_from_towards_data_science(sentence: str) -> str:
     return sentence.replace("A Medium publication sharing concepts, ideas and codes.", "") \
         .replace("Help Status Writers Blog Careers Privacy Terms About Text to speech", "") \
         .replace("Your home for data science.", "") \
-        .replace("Towards Data Science Save", "")\
+        .replace("Towards Data Science Save", "") \
         .replace("Towards Data Science Member-only", "")
 
 
@@ -38,6 +39,10 @@ def filter_common_title_parts_from_towards_data_science(sentence: str) -> str:
 
 
 def download_nltk():
+    """
+    If the venv folder is in the parent directory, and the nltk_data folder is in the venv folder, download the stopwords
+    and punkt packages from nltk
+    """
     # Checking if the venv folder is in the parent directory.
     if "venv" not in os.listdir("../"):
         raise "NO venv dir found!"
@@ -58,11 +63,21 @@ def download_nltk():
 
 
 def preprocess_one_piece_of_text(sentence: str, stop_words=stopwords.words('english'), ps=PorterStemmer()):
+    """
+    1. Tokenize the sentence into words
+    2. Remove stop words
+    3. Stem the words
+    4. Join the words back into a sentence
+
+    :param sentence: the text you want to preprocess
+    :type sentence: str
+    :param stop_words: a list of words that we want to remove from the text
+    :param ps: PorterStemmer()
+    """
     word_tokens = word_tokenize(sentence)
 
     # A list comprehension that is removing the stop words from the sentence.
     filtered_sentence = [w for w in word_tokens if not w in set(stop_words)]
-
 
     # Splitting the sentence into words and then stemming each word.
     preprocessed = []
@@ -71,36 +86,7 @@ def preprocess_one_piece_of_text(sentence: str, stop_words=stopwords.words('engl
     return preprocessed
 
 
-if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser(description='preprocessor using NLTK lib')
-    parser.add_argument('-i', '--input_file_name',
-                        help="filename from ../crawler/crawled_data/", required=True)
-
-    f_name = parser.parse_args().input_file_name
-
-    download_nltk()
-
-    # Reading the csv file and storing it in a dataframe.
-    df = pd.read_csv("../crawler/crawled_data/" + f_name, header=None, sep='\0', low_memory=True)
-
-    preprocessed_contents = np.squeeze(df.values[2:len(df.values):3])
-    preprocessed_authors = np.squeeze(df.values[1:len(df.values):3])
-    preprocessed_titles = np.zeros(int(len(df) / 3), dtype=list)
-
-    ids = df.values[:len(df.values):3]
-    ids = np.squeeze(ids)
-
-    print()
-    print("preprocessing:" + " " * 14 + "\\/")
-
-    # The number of steps that the progress bar will have.
-    toolbar_width = 25
-    use_progressbar = True
-    if len(preprocessed_authors) < toolbar_width:
-        use_progressbar = False
-
+def preprocess_all():
     # setup toolbar
     sys.stdout.write("[%s]" % (" " * toolbar_width))
     sys.stdout.flush()
@@ -134,6 +120,8 @@ if __name__ == '__main__':
     sys.stdout.write("]")
     sys.stdout.flush()
 
+
+def write_output():
     make_output_dir(output_filename="preprocessed_data")
     # Finding the minimum length of the arrays.
     result = pd.DataFrame(data=np.array([ids,
@@ -143,3 +131,44 @@ if __name__ == '__main__':
                                          ]).T,
                           columns=["hash", "Title", "Content", "Author"])
     result.to_csv("./preprocessed_data/preprocessed_" + f_name[7:-3] + "csv", sep=';', encoding='utf-8')
+
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser(description='preprocessor using NLTK lib')
+    parser.add_argument('-i', '--input_file_name',
+                        help="filename from ../crawler/crawled_data/", required=True)
+
+    f_name = parser.parse_args().input_file_name
+
+    download_nltk()
+
+    # Reading the csv file and storing it in a dataframe.
+    df = pd.read_csv("../crawler/crawled_data/" + f_name, header=None, sep='\0', low_memory=True)
+
+    # Taking the values from the dataframe and storing them in arrays.
+    preprocessed_contents = np.squeeze(df.values[2:len(df.values):3])
+    preprocessed_authors = np.squeeze(df.values[1:len(df.values):3])
+    preprocessed_titles = np.zeros(int(len(df) / 3), dtype=list)
+
+    # Taking the first element of each row and storing it in the ids array.
+    ids = df.values[:len(df.values):3]
+    ids = np.squeeze(ids)
+
+    print("starting...")
+    print("preprocessing:" + " " * 14 + "\\/")
+
+    # The number of steps that the progress bar will have.
+    toolbar_width = 25
+    use_progressbar = True
+    if len(preprocessed_authors) < toolbar_width:
+        use_progressbar = False
+    t1 = time.time()
+    # Preprocessing the data.
+    preprocess_all()
+    print("Data preprocessed in", time.time() - t1, "sec")
+
+    # Writing the preprocessed data to a csv file.
+    write_output()
+
