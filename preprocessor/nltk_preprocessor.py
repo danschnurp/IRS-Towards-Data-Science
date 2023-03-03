@@ -37,7 +37,7 @@ def filter_common_title_parts_from_towards_data_science(sentence: str) -> str:
     return sentence.replace("| Towards Data Science", "")
 
 
-def preprocess_one_piece_of_text(sentence: str):
+def download_nltk():
     # Checking if the venv folder is in the parent directory.
     if "venv" not in os.listdir("../"):
         raise "NO venv dir found!"
@@ -56,19 +56,17 @@ def preprocess_one_piece_of_text(sentence: str):
         nltk.download("stopwords", download_dir="../venv/nltk_data")
         nltk.download("punkt", download_dir="../venv/nltk_data")
 
-    stop_words = set(stopwords.words('english'))
+
+def preprocess_one_piece_of_text(sentence: str, stop_words=stopwords.words('english'), ps=PorterStemmer()):
     word_tokens = word_tokenize(sentence)
 
     # A list comprehension that is removing the stop words from the sentence.
-    filtered_sentence = [w for w in word_tokens if not w in stop_words]
-    # print(filtered_sentence)
+    filtered_sentence = [w for w in word_tokens if not w in set(stop_words)]
 
-    # Creating an object of the PorterStemmer class.
-    ps = PorterStemmer()
 
     # Splitting the sentence into words and then stemming each word.
     preprocessed = []
-    for word in sentence.split():
+    for word in filtered_sentence:
         preprocessed.append(ps.stem(word))
     return preprocessed
 
@@ -82,13 +80,18 @@ if __name__ == '__main__':
 
     f_name = parser.parse_args().input_file_name
 
+    download_nltk()
+
     # Reading the csv file and storing it in a dataframe.
     df = pd.read_csv("../crawler/crawled_data/" + f_name, header=None, sep='\0', low_memory=True)
 
-    preprocessed_contents = np.zeros(int(len(df) / 3), dtype=list)
+    preprocessed_contents = np.squeeze(df.values[2:len(df.values):3])
+    preprocessed_authors = np.squeeze(df.values[1:len(df.values):3])
     preprocessed_titles = np.zeros(int(len(df) / 3), dtype=list)
-    preprocessed_authors = np.zeros(int(len(df) / 3), dtype=list)
-    ids = np.zeros(int(len(df) / 3), dtype=int)
+
+    ids = df.values[:len(df.values):3]
+    ids = np.squeeze(ids)
+
     print()
     print("preprocessing:" + " " * 14 + "\\/")
 
@@ -102,9 +105,9 @@ if __name__ == '__main__':
     sys.stdout.write("[%s]" % (" " * toolbar_width))
     sys.stdout.flush()
     sys.stdout.write("\b" * (toolbar_width + 1))
-    counter = 0
+
     # Iterating over the titles and contents array and preprocessing each element.
-    for i in range(0, len(df), 3):
+    for counter, title_author, content, one_id in zip(range(len(ids)), preprocessed_authors, preprocessed_contents, ids):
         if use_progressbar:
             if counter % int((len(preprocessed_authors) / toolbar_width)) == 0:
                 sys.stdout.write("-")
@@ -112,13 +115,11 @@ if __name__ == '__main__':
         if counter == len(preprocessed_authors):
             break
 
-        content = df.values[i+2][0]
-        title_author = df.values[i+1][0]
-        one_id = df.values[i][0].split(")")
-        ids[counter] = one_id[1]
+        ids[counter] = one_id.split(")")[1]
+
         # Preprocessing the content of the article.
         preprocessed_contents[counter] = preprocess_one_piece_of_text(
-                filter_common_sentences_from_towards_data_science(content))
+            filter_common_sentences_from_towards_data_science(content))
 
         title_author = filter_common_title_parts_from_towards_data_science(title_author)
         split = title_author.split("|")
@@ -129,18 +130,16 @@ if __name__ == '__main__':
             preprocessed_authors[counter] = "ANONYMOUS_AUTHOR"
             # Preprocessing the title of the article.
         preprocessed_titles[counter] = preprocess_one_piece_of_text(split[0])
-        counter += 1
 
     sys.stdout.write("]")
     sys.stdout.flush()
 
     make_output_dir(output_filename="preprocessed_data")
     # Finding the minimum length of the arrays.
-    size = np.min(np.array([len(ids), len(preprocessed_titles), len(preprocessed_contents), len(preprocessed_authors)]))
-    result = pd.DataFrame(data=np.array([ids[:size],
-                                         preprocessed_titles[:size],
-                                         preprocessed_contents[:size],
-                                         preprocessed_authors[:size]
+    result = pd.DataFrame(data=np.array([ids,
+                                         preprocessed_titles,
+                                         preprocessed_contents,
+                                         preprocessed_authors
                                          ]).T,
-                          columns=["ID", "Title", "Content", "Author"])
+                          columns=["hash", "Title", "Content", "Author"])
     result.to_csv("./preprocessed_data/preprocessed_" + f_name[7:-3] + "csv", sep=';', encoding='utf-8')
