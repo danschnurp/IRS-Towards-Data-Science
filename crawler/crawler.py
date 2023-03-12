@@ -158,6 +158,7 @@ class Crawler:
                     print(site, "failed")
                     continue
                 print(title)
+                text_content = [i.replace("\n", " ") for i in text_content]
                 out_writer.writelines(str(index) + ")" + str(hash(' '.join(title))) + "\n")
                 out_writer.writelines(' '.join(title) + "\n")
                 out_writer.writelines(' '.join(text_content) + "\n")
