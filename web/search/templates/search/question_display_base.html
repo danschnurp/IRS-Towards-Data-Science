@@ -1,0 +1,136 @@
+{% extends 'search/base.html' %}
+{% load static %}
+{% block content %}
+<main class="testimonials-clean" id="page_content_contatiner" style="background-color: #ecf0f1;">
+        <div id="page_content_filter_panel" class="border rounded shadow-sm" style="background-image: url({% static 'search/images/background.jpg' %});margin-bottom: 1%;">
+            <div style="padding-top: 10px;">
+                <p class="text-center" style="font-size: 24px;color: rgb(49,52,55);"><strong>Question details</strong></p>
+            </div>
+            <hr style="margin-right: 5%;margin-left: 5%;">
+            {% block filter_form_tag %}
+            {% endblock %}
+            <form>
+                <div class="d-xl-flex justify-content-xl-center collapse" id="page_content_filter_menu">
+                    <div class="form-group form-inline filter_item">
+                        <label class="filter_label">Pages:</label>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle float-none filter_button" data-toggle="dropdown" aria-expanded="false" type="button">Select pages</button>
+                            <div class="dropdown-menu" role="menu">
+                                <div class="form-check d-xl-flex justify-content-xl-start dropdown-item" style="margin-left: 12px;">
+                                    <input class="form-check-input all_checkbox" type="checkbox" {% if form.pages %}{% else %}checked{% endif %} name="pages" value="all">
+                                    <label class="form-check-label" for="formCheck-3">All</label>
+                                </div>
+                                <div class="form-check d-xl-flex justify-content-xl-start dropdown-item" style="margin-left: 12px;">
+                                    <input class="form-check-input other_checkbox" type="checkbox" name="pages" value="gamedev" {% if 'gamedev' in form.pages %}checked{% endif %}>
+                                    <label class="form-check-label" for="formCheck-2">Gamedev</label>
+                                </div>
+                                <div class="form-check d-xl-flex justify-content-xl-start dropdown-item" style="margin-left: 12px;">
+                                    <input class="form-check-input other_checkbox" type="checkbox" name="pages" value="TowardsDataScience" {% if 'TowardsDataScience' in form.pages %}checked{% endif %}>
+                                    <label class="form-check-label" for="formCheck-1">TowardsDataScience</label>
+                                </div>
+                                <div class="form-check d-xl-flex justify-content-xl-start dropdown-item" style="margin-left: 12px;">
+                                    <input class="form-check-input other_checkbox" type="checkbox" name="pages" value="3dprinting" {% if '3dprinting' in form.pages %}checked{% endif %}>
+                                    <label class="form-check-label" for="formCheck-3">3D printing</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group form-inline filter_item">
+                        <label class="filter_label" for="formCheck-4">With asnwer only:</label>
+                        <input type="checkbox" class="filter_checkbox" id="with_answer_checkbox"  name="with_answer" value="" {% if form.with_answer %}checked{% endif %}>
+                    </div>
+                    <div class="form-group form-inline filter_item">
+                        <label class="text-right filter_label">Time:</label>
+                        <div id="reportrange" class="form-control" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 360px">
+                            <i class="fa fa-calendar"></i>&nbsp;
+                            <span></span> <i class="fa fa-caret-down"></i>
+                            <input type="hidden" name="date_range_start" id="date_range_start_input" value="{{ form.date_range_start }}">
+                            <input type="hidden" name="date_range_end" id="date_range_end_input" value="{{ form.date_range_end }}">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary filter_button">Refresh</button>
+                </div>
+                <nav class="navbar navbar-light bg-transparent filters_collapse">
+                    <div align="center" style="width: 100%">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#page_content_filter_menu" aria-controls="page_content_filter_menu" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span> Show/Hide filters
+                    </button>
+                    </div>
+                </nav>
+            </form>
+            <div class="float-none" style="clear: left;"></div>
+        </div>
+        </div>
+        <div id="question_list">
+            <div align="center">
+                <div>Loading ...</div>
+                <div class="spinner-grow text-info" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-success" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="spinner-grow text-danger" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+        </div>
+        {% block pagination %}
+        {% endblock %}
+    </main>
+<script type="text/javascript">
+$(function() {
+
+    if($('#date_range_start_input').attr("value") != "")
+    {
+        var start = moment($('#date_range_start_input').attr("value"));
+    }
+    else {
+        var start = moment().subtract(29, 'days');
+    }
+
+
+    if($('#date_range_end_input').attr("value") != "")
+    {
+       var end = moment($('#date_range_end_input').attr("value"));
+    }
+    else {
+       var end = moment();
+    }
+
+    function cb(start, end) {
+        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    }
+
+    $('#reportrange').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+           'Today': [moment(), moment()],
+           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+           'This Month': [moment().startOf('month'), moment().endOf('month')],
+           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+        }
+    }, cb);
+
+    cb(start, end);
+
+});
+
+$("input.all_checkbox").on("change", function () {
+    $("input.other_checkbox").prop("checked", false);
+});
+
+$("input.other_checkbox").on("change", function () {
+    $("input.all_checkbox").prop("checked", false);
+});
+
+$('#reportrange').on("apply.daterangepicker", function (ev, picker) {
+    $('#date_range_start_input').attr("value", picker.startDate.format('YYYY-MM-DD'));
+    $('#date_range_end_input').attr("value", picker.endDate.format('YYYY-MM-DD'));
+});
+
+</script>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'search/base.html' %}
+{% load static %}
+{% block custom_css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'search/my_css.css' %}">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+{% endblock %}
+{% block content %}
+<header class="masthead text-white text-center" style="background: url('../../static/search/images/bg-masthead.jpg')no-repeat center center;background-size: cover;background-image: url('{% static "search/images/background.jpg" %}');">
+    <div class="overlay"></div>
+    <div class="container">
+        <form method="get" action="{% url 'search:question_search' %}">
+            <div class="row">
+                <div class="col-xl-9 mx-auto">
+                    <h1 class="mb-5">Search in Towards Data Science posts!</h1>
+                </div>
+                <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
+                    <div class="form-row">
+                        <div class="col-12 col-md-9 mb-2 mb-md-0"><textarea name="search_text" class="form-control"></textarea></div>
+                        <div class="col-12 col-md-3">
+                            <button class="btn btn-primary btn-block btn-lg" type="submit" style="height: 64px;">
+                                Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</header>
+{% endblock %}

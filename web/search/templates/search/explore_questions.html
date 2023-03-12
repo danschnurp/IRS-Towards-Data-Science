@@ -1,0 +1,54 @@
+{% extends 'search/question_display_base.html' %}
+{% load static %}
+{% block page_header %}
+<header class="testimonials-clean" style="background-image: url({% static 'search/images/background.jpg' %});background-size: cover;padding-bottom: 31px;">
+    <div class="container">
+        <div class="intro">
+            <h2 class="text-center">Explore questions</h2>
+            <p class="text-center" style="color: rgb(73,76,78);">On this site you can explore old questions from StackExchange sites and filter them using many parameters.</p>
+        </div>
+    </div>
+</header>
+{% endblock %}
+{% block pagination %}
+    <nav class="d-flex d-sm-flex d-md-flex d-lg-flex d-xl-flex justify-content-center justify-content-sm-center justify-content-md-center justify-content-lg-center justify-content-xl-center">
+        <ul class="pagination">
+            <li class="page-item" id="prev_page_nav" style="display: none"><a class="page-link" href="{% url 'search:explore_questions_pagination' pagination_info.previous_page_nr %}?{{ pagination_info.url_params }}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+            <li class="page-item" id="current_page_nav" style="display: none"><a class="page-link" href="#">{{ pagination_info.page_nr }}</a></li>
+            <li class="page-item" id="next_page_nav" style="display: none"><a class="page-link" href="{% url 'search:explore_questions_pagination' pagination_info.next_page_nr %}?{{ pagination_info.url_params }}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+        </ul>
+    </nav>
+    <script type="text/javascript">
+    window.onload = get_page_content({{ pagination_info.page_nr }})
+    function get_page_content(page)
+    {
+        var pages_list = []
+        $.each($("input[name='pages']:checked"), function(){
+            pages_list.push($(this).val())
+        })
+        var request = $.ajax({
+            url: "{% url 'search:explore_questions_content_loader' %}"+page+"/",
+            type: 'GET',
+            data: {date_range_start: $('#date_range_start_input').attr("value"), date_range_end: $("#date_range_end_input").attr("value"), with_answer: $("#with_answer_checkbox").attr("checked"), pages: pages_list}
+        });
+        request.done(function (data) {
+            var obj = JSON.parse(data);
+            $("#question_list").html(obj.html);
+            $("#current_page_nav").show();
+            if(obj.has_next_page)
+            {
+                $("#next_page_nav").show();
+            }
+
+            if(obj.has_previous_page)
+            {
+                $("#prev_page_nav").show();
+            }
+        })
+    }
+
+</script>
+{% endblock %}
+{% block filter_form_tag %}
+    <form method="get" action="{% url 'search:explore_questions' %}">
+{% endblock %}

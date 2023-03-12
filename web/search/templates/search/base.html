@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    {% load static %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=yes">
+    <title>Towards Data Science search</title>
+    <meta name="description" content="Type">
+    <link rel="stylesheet" href="{% static "search/bootstrap.min.css" %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic">
+    <link rel="stylesheet" href="{% static "search/Navigation-with-Button.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'search/my_css.css' %}">
+    <link rel="stylesheet" type="text/css", href="{% static 'search/Testimonials.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    {% block custom_css %}{% endblock %}
+</head>
+
+<body>
+<div>
+    <nav class="navbar navbar-light navbar-expand-md navigation-clean-button">
+        <div class="container"><a class="navbar-brand" href="{% url 'search:index' %}">Towards Data Science search</a>
+            <button data-toggle="collapse" class="navbar-toggler" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span
+                    class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navcol-1">
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item" role="presentation"></li>
+                    <li class="nav-item" role="presentation"><a class="nav-link" href="{% url 'search:explore_questions' %}">Explore</a></li>
+                </ul>
+                {% if display_search %}
+                <form class="form-inline my-2 my-lg-0" style="margin-right: 10px" action="{% url 'search:question_search' %}" method="get">
+                    <input class="form-control mr-sm-2" type="search" name="search_text" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
+                </form>
+                {% endif %}
+                <span class="navbar-text actions"> <a class="login" href="#">Admin login</a></span></div>
+        </div>
+    </nav>
+</div>
+{% block page_header %}
+{% endblock %}
+{% block content %}
+{% endblock %}
+<footer class="footer bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6 my-auto h-100 text-center text-lg-left">
+                <ul class="list-inline mb-2">
+                    <li class="list-inline-item"><a href="#">About</a></li>
+                    <li class="list-inline-item"><span>⋅</span></li>
+                    <li class="list-inline-item"><a href="#">Contact</a></li>
+                    <li class="list-inline-item"><span>⋅</span></li>
+                    <li class="list-inline-item"><a href="#">Terms of &nbsp;Use</a></li>
+                    <li class="list-inline-item"><span>⋅</span></li>
+                    <li class="list-inline-item"><a href="#">Privacy Policy</a></li>
+                </ul>
+                <p class="text-muted small mb-4 mb-lg-0">© semestral work KIV/IR 2023. All Rights Reserved.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+
+</html>

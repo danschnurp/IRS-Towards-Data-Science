@@ -1,0 +1,68 @@
+{% extends 'search/base.html' %}
+{% load static %}
+{% block page_header %}
+    <header class="testimonials-clean" style="background-image: url({% static 'search/images/background.jpg' %});background-size: cover;padding-bottom: 31px;">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Question details</h2>
+                <p class="text-center" style="color: rgb(73,76,78);">On this site you can explore all the content asociated to chosen post.</p>
+            </div>
+        </div>
+    </header>
+{% endblock %}
+{% block content %}
+    <main class="bg-light testimonials-clean" style="background-color: #ecf0f1; padding: 10px">
+        <div class="jumbotron shadow" id="article">
+            <h1 class="text-center" id="article_title">{{ post.title }}<br></h1>
+            <p class="text-center" id="article_author"><i class="fa fa-user" style="margin-right: 10px;"></i>{{ post.author }}</p>
+            <p class="text-center" id="article_date"><i class="far fa-calendar-times" style="margin-right: 10px;"></i>{{ post.date }}</p>
+            <hr>
+            <h6><i class="fa fa-question" style="margin-right: 10px;"></i>Question:</h6>
+            <div class="card" id="article_text">
+                <div class="card-body">
+                    <p class="card-text">{{ post.text|safe }}</p>
+                </div>
+            </div>
+            <hr>
+            {% if accepted_answer %}
+            <h6><i class="fas fa-comment-dots" style="margin-right: 10px;"></i>Accepted answer:</h6>
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-title text-muted" style="margin-bottom: 12px;"><i class="fa fa-user" style="margin-right: 14px;"></i>{{ accepted_answer.author }}</h6>
+                    <h6 class="text-muted card-subtitle mb-2"><i class="far fa-calendar-times" style="margin-right: 10px;"></i>{{ accepted_answer.date }}</h6>
+                    <p class="card-text">{{ accepted_answer.text|safe }}</p>
+                </div>
+            </div>
+            {% endif %}
+            {% if answers %}
+            <h6 style="margin-top: 10px;"><i class="far fa-comment-dots" style="margin-right: 10px;"></i>Answers:</h6>
+                <div id="answers_scrollbar">
+                {% for answer in answers %}
+                    <div class="card" style="margin-bottom: 10px;">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted" style="margin-bottom: 12px;"><i class="fa fa-user" style="margin-right: 14px;"></i>{{ answer.author }}</h6>
+                            <h6 class="text-muted card-subtitle mb-2"><i class="far fa-calendar-times" style="margin-right: 10px;"></i>{{ answer.date }}</h6>
+                            <p class="card-text">{{ answer.text|safe }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+            <hr>
+            {% if comments %}
+            <h6 style="margin-top: 10px;"><i class="far fa-comments" style="margin-right: 10px;"></i>Comments:</h6>
+                <div id="comments_scrollbar">
+                {% for comment in comments %}
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-title text-muted" style="margin-bottom: 12px;"><i class="fa fa-user" style="margin-right: 14px;"></i>{{ comment.author }}</h6>
+                            <h6 class="text-muted card-subtitle mb-2"><i class="far fa-calendar-times" style="margin-right: 10px;"></i>{{ comment.date }}</h6>
+                            <p class="card-text">{{ comment.text|safe }}.</p>
+                        </div>
+                    </div>
+                {% endfor%}
+                </div>
+            {% endif %}
+        </div>
+    </main>
+{% endblock %}

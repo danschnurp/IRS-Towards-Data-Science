@@ -1,0 +1,28 @@
+{% load static %}
+{% for post in posts %}
+<div class="row shadow-sm post_list_item_container" style="margin-bottom: 15px;">
+    <div class="col post_list_item">
+        <div class="post_meta">
+            <a href="{% url 'search:detail' post.page post.post_ID %}">
+                <h5>{{ post.title }}</h5>
+            </a>
+            <span class="comment_count">
+                <a class="comment_count_icon" href="{% url 'search:detail' post.page post.post_ID %}">0</a>
+                <p class="d-xl-flex justify-content-xl-start comment_count_nr">{{ post.comment_count }}</p>
+            </span>
+            <p class="author_name"><i class="fa fa-user"></i>{{ post.author_name }}</p>
+            <p class="post_page"><i class="fas fa-book-open"></i> {{ post.page }}</p>
+            <p class="post_accepted_answer">Accepted answer:&nbsp;<i class="far {% if post.accepted_answer_ID %} fa-check-circle {% else %} fa-times-circle {% endif %}"></i></p>
+        </div>
+        <hr class="post_meta_separator">
+        <div style="clear: right"></div>
+        <div class="post_text_container">
+            <p>{{ post.text|safe }}</p>
+        </div>
+    </div>
+</div>
+{% empty %}
+<div class="alert alert-warning" role="alert" style="margin-left: 10%; margin-right: 10%;" align="center">
+    Sorry, there is no post to be displayed!
+</div>
+{% endfor %}
