@@ -1,0 +1,10 @@
+POST datascience/_delete_by_query
+{
+ "query": {
+   "range": {
+     "@timestamp": {
+       "lte": "now-1d"
+      }
+    }
+  }
+}
