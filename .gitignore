@@ -130,3 +130,5 @@ dmypy.json
 
 crawled_data/
 preprocessed_data/
+.idea
+.vscode
