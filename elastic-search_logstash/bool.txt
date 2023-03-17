@@ -1,0 +1,22 @@
+POST datascience/_search
+{
+  "query": {
+    "bool" : {
+      "must" : {
+       ...
+      },
+      "filter": {
+        ...
+      },
+      "must_not" : {
+        ...
+      },
+      "should" : [
+       ...
+      ],
+      "minimum_should_match" : 1,
+      "boost" : 1.0
+    }
+  }
+}
+'
