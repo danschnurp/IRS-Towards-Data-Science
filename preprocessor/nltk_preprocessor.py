@@ -68,8 +68,6 @@ def preprocess_one_piece_of_text(sentence: str):
 
     :param sentence: the text you want to preprocess
     :type sentence: str
-    :param stop_words: a list of words that we want to remove from the text
-    :param ps: PorterStemmer()
     """
 
     word_tokens = word_tokenize(sentence)
@@ -109,11 +107,15 @@ def preprocess_all():
         split = title_author.split("|")
         # Removing the "by " and the " " from the author name.
         if len(split) > 2:
-            preprocessed_authors[counter] = split[1][4:-1]
+            preprocessed_authors[counter] = split[2][4:-1]
         else:
             preprocessed_authors[counter] = "ANONYMOUS_AUTHOR"
             # Preprocessing the title of the article.
-        preprocessed_titles[counter] = preprocess_one_piece_of_text(split[1])
+        try:
+            preprocessed_titles[counter] = preprocess_one_piece_of_text(split[1])
+        except IndexError:
+            raise "Ups, input data are malformed."
+
         preprocessed_dates[counter] = split[0]
 
     sys.stdout.write("]")
@@ -131,6 +133,19 @@ def write_output():
                                          ]).T,
                           columns=["hash", "Date", "Title", "Content", "Author"])
     result.to_csv("./preprocessed_data/preprocessed_" + f_name[7:-3] + "csv", sep=';', encoding='utf-8')
+
+
+def repair_data():
+    # in progress
+    with open("../crawler/crawled_data/" + f_name, encoding="utf-8") as f:
+        df = f.readlines()
+    for i in range(0, len(df), 3):
+        if ")" not in df[i] or 10 != len(df[i+1].split("|")[0]) or len(df[i+1]) > len(df[i+2]):
+            print(len(df[i+1].split("|")[0]))
+            print(i/3, df[i])
+            for j in df[i-5:i+5]:
+                print(j)
+            exit(0)
 
 
 if __name__ == '__main__':
@@ -179,4 +194,3 @@ if __name__ == '__main__':
 
     # Writing the preprocessed data to a csv file.
     write_output()
-
