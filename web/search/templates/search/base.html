@@ -32,7 +32,7 @@
             <div class="collapse navbar-collapse" id="navcol-1">
                 <ul class="nav navbar-nav mr-auto">
                     <li class="nav-item" role="presentation"></li>
-                    <li class="nav-item" role="presentation"><a class="nav-link" href="{% url 'search:explore_questions' %}">Explore</a></li>
+                    <li class="nav-item" role="presentation"></li>
                 </ul>
                 {% if display_search %}
                 <form class="form-inline my-2 my-lg-0" style="margin-right: 10px" action="{% url 'search:question_search' %}" method="get">
@@ -40,7 +40,7 @@
                     <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
                 </form>
                 {% endif %}
-                <span class="navbar-text actions"> <a class="login" href="#">Admin login</a></span></div>
+                </div>
         </div>
     </nav>
 </div>

@@ -6,9 +6,6 @@ import sys
 import time
 
 import numpy as np
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-from nltk.tokenize import word_tokenize
 import pandas as pd
 
 from crawler.utils import make_output_dir
@@ -62,7 +59,7 @@ def download_nltk():
         nltk.download("punkt", download_dir="../venv/nltk_data")
 
 
-def preprocess_one_piece_of_text(sentence: str, stop_words=stopwords.words('english'), ps=PorterStemmer()):
+def preprocess_one_piece_of_text(sentence: str):
     """
     1. Tokenize the sentence into words
     2. Remove stop words
@@ -74,6 +71,7 @@ def preprocess_one_piece_of_text(sentence: str, stop_words=stopwords.words('engl
     :param stop_words: a list of words that we want to remove from the text
     :param ps: PorterStemmer()
     """
+
     word_tokens = word_tokenize(sentence)
 
     # A list comprehension that is removing the stop words from the sentence.
@@ -110,12 +108,13 @@ def preprocess_all():
         title_author = filter_common_title_parts_from_towards_data_science(title_author)
         split = title_author.split("|")
         # Removing the "by " and the " " from the author name.
-        if len(split) > 1:
+        if len(split) > 2:
             preprocessed_authors[counter] = split[1][4:-1]
         else:
             preprocessed_authors[counter] = "ANONYMOUS_AUTHOR"
             # Preprocessing the title of the article.
-        preprocessed_titles[counter] = preprocess_one_piece_of_text(split[0])
+        preprocessed_titles[counter] = preprocess_one_piece_of_text(split[1])
+        preprocessed_dates[counter] = split[0]
 
     sys.stdout.write("]")
     sys.stdout.flush()
@@ -125,11 +124,12 @@ def write_output():
     make_output_dir(output_filename="preprocessed_data")
     # Finding the minimum length of the arrays.
     result = pd.DataFrame(data=np.array([ids,
+                                         preprocessed_dates,
                                          preprocessed_titles,
                                          preprocessed_contents,
                                          preprocessed_authors
                                          ]).T,
-                          columns=["hash", "Title", "Content", "Author"])
+                          columns=["hash", "Date", "Title", "Content", "Author"])
     result.to_csv("./preprocessed_data/preprocessed_" + f_name[7:-3] + "csv", sep=';', encoding='utf-8')
 
 
@@ -143,6 +143,12 @@ if __name__ == '__main__':
     f_name = parser.parse_args().input_file_name
 
     download_nltk()
+    from nltk.corpus import stopwords
+    from nltk.stem import PorterStemmer
+    from nltk.tokenize import word_tokenize
+
+    stop_words = stopwords.words('english')
+    ps = PorterStemmer()
 
     # Reading the csv file and storing it in a dataframe.
     df = pd.read_csv("../crawler/crawled_data/" + f_name, header=None, sep='\0', low_memory=True)
@@ -151,6 +157,7 @@ if __name__ == '__main__':
     preprocessed_contents = np.squeeze(df.values[2:len(df.values):3])
     preprocessed_authors = np.squeeze(df.values[1:len(df.values):3])
     preprocessed_titles = np.zeros(int(len(df) / 3), dtype=list)
+    preprocessed_dates = np.zeros(int(len(df) / 3), dtype=list)
 
     # Taking the first element of each row and storing it in the ids array.
     ids = df.values[:len(df.values):3]

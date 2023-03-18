@@ -2,14 +2,13 @@
 #  author: Daniel Schnurpfeil
 #
 import os
-import random
 import sys
 import time
 from copy import copy
 
 from bs4 import BeautifulSoup
 from lxml.html.soupparser import fromstring
-from requests import get, exceptions
+from requests import get
 
 
 class Crawler:
@@ -128,10 +127,12 @@ class Crawler:
             for index, sub_sitemap_url in enumerate(sub_sitemaps):
                 sites = self.get_urls_from_sitemap_by_xpath(sub_sitemap_url.text,
                                                             xpath="//loc[contains(text(),'" + self.main_site + "')]")
+                dates = self.get_urls_from_sitemap_by_xpath(sub_sitemap_url.text,
+                                                            xpath="//url[contains(loc/text(),'data')]/lastmod/text()")
                 # Iterating through the sites, and then appending the text of the site to the html_sites list.
-                for site in sites:
+                for datum, site in zip(dates, sites):
                     html_sites.append(site.text)
-                    out_writer.writelines(str(site.text + "\n"))
+                    out_writer.writelines(str(datum + " " + site.text + "\n"))
                     if index % 25 == 0:
                         print("amount prepared urls:", len(html_sites), "elapsed time:", time.time() - t1, "s")
         self.html_sites = html_sites
@@ -153,14 +154,15 @@ class Crawler:
                   encoding="utf-8") as out_writer:
             # iterating over cached sites can be parallelized
             for index, site in enumerate(self.html_sites):
-                title, text_content = self.crawl_one_site(site)
+                datum, site_url = site.split(" ")
+                title, text_content = self.crawl_one_site(site_url)
                 if title == "failed":
-                    print(site, "failed")
+                    print(site_url, "failed")
                     continue
                 print(title)
                 text_content = [i.replace("\n", " ") for i in text_content]
                 out_writer.writelines(str(index) + ")" + str(hash(' '.join(title))) + "\n")
-                out_writer.writelines(' '.join(title) + "\n")
+                out_writer.writelines(datum + "|" + ' '.join(title) + "\n")
                 out_writer.writelines(' '.join(text_content) + "\n")
 
     def crawl_one_site(self, site) -> tuple:

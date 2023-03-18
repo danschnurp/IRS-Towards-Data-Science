@@ -21,23 +21,12 @@
                                     <label class="form-check-label" for="formCheck-3">All</label>
                                 </div>
                                 <div class="form-check d-xl-flex justify-content-xl-start dropdown-item" style="margin-left: 12px;">
-                                    <input class="form-check-input other_checkbox" type="checkbox" name="pages" value="gamedev" {% if 'gamedev' in form.pages %}checked{% endif %}>
-                                    <label class="form-check-label" for="formCheck-2">Gamedev</label>
-                                </div>
-                                <div class="form-check d-xl-flex justify-content-xl-start dropdown-item" style="margin-left: 12px;">
                                     <input class="form-check-input other_checkbox" type="checkbox" name="pages" value="TowardsDataScience" {% if 'TowardsDataScience' in form.pages %}checked{% endif %}>
                                     <label class="form-check-label" for="formCheck-1">TowardsDataScience</label>
                                 </div>
-                                <div class="form-check d-xl-flex justify-content-xl-start dropdown-item" style="margin-left: 12px;">
-                                    <input class="form-check-input other_checkbox" type="checkbox" name="pages" value="3dprinting" {% if '3dprinting' in form.pages %}checked{% endif %}>
-                                    <label class="form-check-label" for="formCheck-3">3D printing</label>
-                                </div>
+
                             </div>
                         </div>
-                    </div>
-                    <div class="form-group form-inline filter_item">
-                        <label class="filter_label" for="formCheck-4">With asnwer only:</label>
-                        <input type="checkbox" class="filter_checkbox" id="with_answer_checkbox"  name="with_answer" value="" {% if form.with_answer %}checked{% endif %}>
                     </div>
                     <div class="form-group form-inline filter_item">
                         <label class="text-right filter_label">Time:</label>
