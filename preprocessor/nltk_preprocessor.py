@@ -8,7 +8,7 @@ import time
 import numpy as np
 import pandas as pd
 
-from crawler.utils import make_output_dir
+from utils import make_output_dir
 
 
 def filter_common_sentences_from_towards_data_science(sentence: str) -> str:
