@@ -161,6 +161,7 @@ class Crawler:
                     continue
                 print(title)
                 text_content = [i.replace("\n", " ") for i in text_content]
+                title = [i.replace("\n", " ") for i in title]
                 out_writer.writelines(str(index) + ")" + str(hash(' '.join(title))) + "\n")
                 out_writer.writelines(datum + "|" + ' '.join(title) + "\n")
                 out_writer.writelines(' '.join(text_content) + "\n")
