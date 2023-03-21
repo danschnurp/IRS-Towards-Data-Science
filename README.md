@@ -1,11 +1,13 @@
-# Simple Crawler
+# Information Retrieval System of Towards Data Science
+
+### Simple Crawler
 - crawling website: [Towards Data Science](https://towardsdatascience.com/) posts(articles) 
 read from sitemap.xml and for each post saving title 
 and content in `<p>...</p>` by using simple xpath expressions
 
 - before start:
 `pip install -r requirements.txt`
-- usage: `python main.py`
+- usage: `python main_crawler.py`
 - or with custom parameters:
 ```
 usage: main.py [-h] [-u MAIN_SITE_URL] [-o OUTPUT_DIR] [-p PREPARED_URLS]
@@ -28,4 +30,17 @@ options:
 - if needed, dataset can be easily extended
 
 - parallelization can be added as well but due to politeness of the crawler is not implemented
+
+### NLTK preprocessor
+
+```
+usage: main_preprocessor.py [-h] -i INPUT_FILE_NAME
+
+preprocessor using NLTK lib
+
+options:
+  -h, --help            show this help message and exit
+  -i INPUT_FILE_NAME, --input_file_name INPUT_FILE_NAME
+                        filename from ../crawler/crawled_data/
+```
 
