@@ -40,15 +40,12 @@
                     <li class="nav-item" role="presentation"></li>
                     <li class="nav-item" role="presentation"><a class="nav-link" >Explore</a></li>
                 </ul>
-                {% if display_search %}
-                <form class="form-inline my-2 my-lg-0" style="margin-right: 10px" action="{% url 'search:question_search' %}" method="get">
-                    <input class="form-control mr-sm-2" type="search" name="search_text" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Search</button>
-                </form>
+
                 <form class="form-inline my-2 my-lg-0" style="margin-right: 10px" method="get">
-                    <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Post Your Question</button>
+                    <input class="form-control mr-sm-2" type="search" name="search_text" placeholder="URL" aria-label="URL">
+                    <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Index url</button>
                 </form>
-                {% endif %}
+
                 <span class="navbar-text actions"> <a class="login" href="#">Admin login</a></span></div>
         </div>
     </nav>
