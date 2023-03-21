@@ -40,6 +40,8 @@ if __name__ == '__main__':
                         help='reformat to csv only? True/False')
     args = parser.parse_args()
 
+    # Checking if the venv folder is in the parent directory, and if the nltk_data folder is in the venv folder. If not,
+    # it downloads the stopwords and punkt packages from nltk.
     download_nltk()
     from nltk.corpus import stopwords
     from nltk.stem import PorterStemmer
@@ -47,6 +49,7 @@ if __name__ == '__main__':
     stop_words = stopwords.words('english')
     ps = PorterStemmer()
 
+    # Creating an instance of the NltkPreprocessor class.
     preprocessor = NltkPreprocessor(args.input_file_name, stop_words, ps, make_csv_only=args.make_csv_only)
 
     t1 = time.time()

@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # Telling Django to look for the `SearchConfig` class in the `search` app.
     'search.apps.SearchConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,6 +55,7 @@ ROOT_URLCONF = 'towards_data_science.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # Telling Django where to look for templates.
         'DIRS': [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -115,6 +117,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
+# The URL prefix for static files.
 STATIC_URL = '/static/'
 
 # Default primary key field type
