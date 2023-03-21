@@ -35,8 +35,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='preprocessor using NLTK lib')
     parser.add_argument('-i', '--input_file_name',
                         help="filename from ../crawler/crawled_data/", required=True)
-
-    f_name = parser.parse_args().input_file_name
+    parser.add_argument('-o', '--make_csv_only',
+                        default=False, type=bool,
+                        help='reformat to csv only? True/False')
+    args = parser.parse_args()
 
     download_nltk()
     from nltk.corpus import stopwords
@@ -45,7 +47,7 @@ if __name__ == '__main__':
     stop_words = stopwords.words('english')
     ps = PorterStemmer()
 
-    preprocessor = NltkPreprocessor(f_name, stop_words, ps)
+    preprocessor = NltkPreprocessor(args.input_file_name, stop_words, ps, make_csv_only=args.make_csv_only)
 
     t1 = time.time()
     print("starting...")

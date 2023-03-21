@@ -10,9 +10,10 @@ from nltk.tokenize import word_tokenize
 
 class NltkPreprocessor:
 
-    def __init__(self, f_name, stop_words, ps):
+    def __init__(self, f_name, stop_words, ps, make_csv_only=False):
 
         self.f_name, self.stop_words, self.ps = f_name, stop_words, ps
+        self.make_csv_only = make_csv_only
         
         # Reading the csv file and storing it in a dataframe.
         df = pd.read_csv("./crawlers/crawled_data/" + self.f_name, header=None, sep='\0', low_memory=True)
@@ -99,8 +100,11 @@ class NltkPreprocessor:
             self.ids[counter] = one_id.split(")")[1]
 
             # Preprocessing the content of the article.
-            self.preprocessed_contents[counter] = self.preprocess_one_piece_of_text(
-                self.filter_common_sentences_from_towards_data_science(content))
+            if self.make_csv_only:
+                self.preprocessed_contents[counter] = self.filter_common_sentences_from_towards_data_science(content)
+            else:
+                self.preprocessed_contents[counter] = self.preprocess_one_piece_of_text(
+                    self.filter_common_sentences_from_towards_data_science(content))
 
             title_author = self.filter_common_title_parts_from_towards_data_science(title_author)
             split = title_author.split("|")
@@ -111,7 +115,10 @@ class NltkPreprocessor:
                 self.preprocessed_authors[counter] = "ANONYMOUS_AUTHOR"
                 # Preprocessing the title of the article.
             try:
-                self.preprocessed_titles[counter] = self.preprocess_one_piece_of_text(split[1])
+                if self.make_csv_only:
+                    self.preprocessed_titles[counter] = split[1]
+                else:
+                    self.preprocessed_titles[counter] = self.preprocess_one_piece_of_text(split[1])
             except IndexError:
                 raise "Ups, input data are malformed."
 
@@ -129,4 +136,8 @@ class NltkPreprocessor:
                                              self.preprocessed_authors
                                              ]).T,
                               columns=["hash", "Date", "Title", "Content", "Author"])
-        result.to_csv("./preprocessed_data/preprocessed_" + self.f_name[7:-3] + "csv", sep=';', encoding='utf-8')
+        preprocessed_label = ""
+        if self.make_csv_only:
+            preprocessed_label = "preprocessed"
+        result.to_csv("./preprocessed_data/" + preprocessed_label + self.f_name[7:-3] + "csv",
+                      sep=';', encoding='utf-8')
