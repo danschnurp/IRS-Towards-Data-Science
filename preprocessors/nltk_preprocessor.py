@@ -137,7 +137,7 @@ class NltkPreprocessor:
                                              ]).T,
                               columns=["hash", "Date", "Title", "Content", "Author"])
         preprocessed_label = ""
-        if self.make_csv_only:
+        if not self.make_csv_only:
             preprocessed_label = "preprocessed"
         result.to_csv("./preprocessed_data/" + preprocessed_label + self.f_name[7:-3] + "csv",
                       sep=';', encoding='utf-8')
