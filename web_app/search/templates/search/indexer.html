@@ -1,18 +1,18 @@
 {% extends 'search/base.html' %}
-{% block search_manager %}
+{% block index_manager %}
 <form method="get">
     <div class="row">
         <div class="col-xl-9 mx-auto">
-            <h1 class="mb-5">Simple IR System</h1>
+            <h1 class="mb-5">Put New Data into Search</h1>
         </div>
         <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
             <div class="form-row">
-                <div class="col-12 col-md-9 mb-2 mb-md-0"><textarea class="form-control" name="search_text"
-                                                                    placeholder="Your interesting question"></textarea>
+                <div class="col-12 col-md-9 mb-2 mb-md-0"><textarea class="form-control" name="index_url"
+                                                                    placeholder="https://towardsdatascience.com/django-or-flask-recommendation-from-my-experience-60257b6b7ca6"></textarea>
                 </div>
                 <div class="col-12 col-md-3">
                     <button class="btn btn-primary btn-block btn-lg" style="height: 64px;" type="submit">
-                        Search
+                        Index URL
                     </button>
                     <br> <br>
                 </div>

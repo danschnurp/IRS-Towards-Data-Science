@@ -5,4 +5,5 @@ from . import views
 app_name = "search"
 urlpatterns = [
     path('', views.index, name='index'),
+    path('indexer/', views.indexer, name="index_manager"),
 ]

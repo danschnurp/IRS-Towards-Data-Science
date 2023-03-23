@@ -27,13 +27,17 @@
                     <div class="collapse navbar-collapse" id="navcol-1">
                         <ul class="nav navbar-nav mr-auto">
                             <li class="nav-item" role="presentation"></li>
-                            <li class="nav-item" role="presentation"><a class="nav-link">Explore</a></li>
+                            <li class="nav-item" role="presentation"><a class="nav-link"
+                                                                        href="{% url 'search:index' %}">Search</a></li>
+                            <li class="nav-item" role="presentation"><a class="nav-link"
+                                                                        href="{% url 'search:index_manager' %}">Indexer</a>
+                            </li>
                         </ul>
-                        <form class="form-inline my-2 my-lg-0" method="get" style="margin-right: 10px">
-                            <input aria-label="URL" class="form-control mr-sm-2" name="search_text" placeholder="URL"
-                                   type="search">
-                            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Index url</button>
-                        </form>
+                        <!--                        <form class="form-inline my-2 my-lg-0" method="get" style="margin-right: 10px">-->
+                        <!--                            <input aria-label="URL" class="form-control mr-sm-2" name="search_text" placeholder="URL"-->
+                        <!--                                   type="search">-->
+                        <!--                            <button class="btn btn-outline-info my-2 my-sm-0" type="submit">Index url</button>-->
+                        <!--                        </form>-->
                         <span class="navbar-text actions"> <a class="login" href="#">Admin login</a></span>
                     </div>
                 </div>
@@ -49,6 +53,8 @@
         <div class="overlay"></div>
         <div class="container">
             {% block search_manager %}
+            {% endblock %}
+            {% block index_manager %}
             {% endblock %}
         </div>
         <div class="overlay"></div>
