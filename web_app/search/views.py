@@ -1,4 +1,4 @@
-
+from django.http import HttpResponse
 from django.shortcuts import render
 
 
@@ -19,4 +19,4 @@ def indexer(request):
     :param request: http request object
     :return: rendered page
     """
-    return render(request, "search/indexer.html", None)
+    return render(request, "search/indexer.html", context={"display_search": True})

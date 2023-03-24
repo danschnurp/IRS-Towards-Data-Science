@@ -16,7 +16,7 @@ class NltkPreprocessor:
         self.make_csv_only = make_csv_only
         
         # Reading the csv file and storing it in a dataframe.
-        df = pd.read_csv("./crawlers/crawled_data/" + self.f_name, header=None, sep='\0', low_memory=True)
+        df = pd.read_csv(self.f_name, header=None, sep='\0', low_memory=True)
 
         # Taking the values from the dataframe and storing them in arrays.
         self.preprocessed_contents = np.squeeze(df.values[2:len(df.values):3])
@@ -138,6 +138,6 @@ class NltkPreprocessor:
                               columns=["hash", "Date", "Title", "Content", "Author"])
         preprocessed_label = ""
         if not self.make_csv_only:
-            preprocessed_label = "preprocessed"
-        result.to_csv("./preprocessed_data/" + preprocessed_label + self.f_name[7:-3] + "csv",
+            preprocessed_label = "preprocessed_"
+        result.to_csv("./preprocessed_data/" + preprocessed_label + self.f_name[-27:-3] + "csv",
                       sep=';', encoding='utf-8')

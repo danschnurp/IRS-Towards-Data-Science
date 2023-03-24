@@ -3,11 +3,10 @@
     /* The image used */
     background-image: url("background.svg");
     /* Half height */
-    height: 30%;
+    height: 100%;
     /* Center and scale the image nicely */
-    background-position: center;
+    background-position: left;
     background-repeat: no-repeat;
-    background-size: cover;
 
 }
 .page-holder {
@@ -15,7 +14,7 @@
 }
 
 .bg-cover {
-    background-size: cover !important;
+    background-size: 66% !important;
 }
 
 #fileDisplayArea {

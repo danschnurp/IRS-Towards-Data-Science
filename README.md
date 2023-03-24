@@ -1,12 +1,28 @@
 # Information Retrieval System of Towards Data Science
 
+
+
+- before start:
+`pip install -r requirements.txt`
+
+## Components
+
+### Web Application 
+
+- usage: `python ./web_app/manage.py runserver`
+
+in progress:
+
+
+![](webapp.png)
+
+
+
 ### Simple Crawler
 - crawling website: [Towards Data Science](https://towardsdatascience.com/) posts(articles) 
 read from sitemap.xml and for each post saving title 
 and content in `<p>...</p>` by using simple xpath expressions
 
-- before start:
-`pip install -r requirements.txt`
 - usage: `python main_crawler.py`
 - or with custom parameters:
 ```
@@ -32,15 +48,17 @@ options:
 - parallelization can be added as well but due to politeness of the crawler is not implemented
 
 ### NLTK preprocessor
-
+- usage: `python main_preprocessor.py`
 ```
-usage: main_preprocessor.py [-h] -i INPUT_FILE_NAME
+usage: main_preprocessor.py [-h] -i INPUT_FILE_PATH [-o MAKE_CSV_ONLY]
 
 preprocessor using NLTK lib
 
 options:
   -h, --help            show this help message and exit
-  -i INPUT_FILE_NAME, --input_file_name INPUT_FILE_NAME
-                        filename from ../crawler/crawled_data/
+  -i INPUT_FILE_PATH, --input_file_path INPUT_FILE_PATH
+  -o MAKE_CSV_ONLY, --make_csv_only MAKE_CSV_ONLY
+                        reformat to csv only? True/False
+
 ```
 

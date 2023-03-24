@@ -33,8 +33,8 @@ if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(description='preprocessor using NLTK lib')
-    parser.add_argument('-i', '--input_file_name',
-                        help="filename from ../crawler/crawled_data/", required=True)
+    parser.add_argument('-i', '--input_file_path',
+                        required=True)
     parser.add_argument('-o', '--make_csv_only',
                         default=False, type=bool,
                         help='reformat to csv only? True/False')
@@ -50,7 +50,7 @@ if __name__ == '__main__':
     ps = PorterStemmer()
 
     # Creating an instance of the NltkPreprocessor class.
-    preprocessor = NltkPreprocessor(args.input_file_name, stop_words, ps, make_csv_only=args.make_csv_only)
+    preprocessor = NltkPreprocessor(args.input_file_path, stop_words, ps, make_csv_only=args.make_csv_only)
 
     t1 = time.time()
     print("starting...")
