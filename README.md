@@ -14,7 +14,6 @@
 in progress:
 
 
-![](webapp.png)
 
 
 
@@ -62,3 +61,4 @@ options:
 
 ```
 
+### Indexer (inverted index creator)
