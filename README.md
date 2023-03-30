@@ -9,7 +9,7 @@
 
 ### Web Application 
 
-- usage: `python ./web_app/manage.py runserver`
+- usage: `python web_app/backend/manage.py runserver`
 
 in progress:
 

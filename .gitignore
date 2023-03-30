@@ -174,4 +174,4 @@ web_app/frontend/towards_data_science/typings
 # System files
 .DS_Store
 Thumbs.db
-/web_app/frontend/towards_data_science/node_modules/
+/web_app/frontend/towards_data_science/node_modules
