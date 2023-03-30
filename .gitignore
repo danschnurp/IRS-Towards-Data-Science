@@ -132,3 +132,45 @@ crawled_data/
 preprocessed_data/
 .idea
 .vscode
+ang/
+
+# Compiled output
+web_app/frontend/towards_data_science/dist
+web_app/frontend/towards_data_science/tmp
+web_app/frontend/towards_data_science/out-tsc
+web_app/frontend/towards_data_science/bazel-out
+
+# Node
+web_app/frontend/towards_data_science/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+web_app/frontend/towards_data_science/.angular
+.sass-cache/
+web_app/frontend/towards_data_science/connect.lock
+web_app/frontend/towards_data_science/coverage
+web_app/frontend/towards_data_science/libpeerconnection.log
+testem.log
+web_app/frontend/towards_data_science/typings
+
+# System files
+.DS_Store
+Thumbs.db
