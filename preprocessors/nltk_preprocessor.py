@@ -29,6 +29,7 @@ class NltkPreprocessor:
         self.preprocessed_authors = np.zeros(int(len(df) / 3), dtype=list)
         self.preprocessed_titles = np.zeros(int(len(df) / 3), dtype=list)
         self.preprocessed_dates = np.zeros(int(len(df) / 3), dtype=list)
+        self.preprocessed_links = np.zeros(int(len(df) / 3), dtype=list)
 
         # Taking the first element of each row and storing it in the self.ids array.
         self.ids = df.values[:len(df.values):3]
@@ -84,18 +85,16 @@ class NltkPreprocessor:
                 sys.stdout.write("-")
                 sys.stdout.flush()
 
-        # 253 sec for 61 MB large file
-        # return [word for word in word_tokenize(sentence) if self.ps.stem(word) not in self.stop_words]
-
-        #
+        # It splits the sentence into words.
         word_tokens = word_tokenize(sentence)
         preprocessed = ""
         # Splitting the sentence into words and then stemming each word.
         for word in word_tokens:
-            preprocessed_word = self.ps.stem(word)
-            # removing the stop words from the sentence.
-            if preprocessed_word not in self.stop_words:
-                preprocessed += preprocessed_word + " "
+            if word not in self.stop_words:
+                preprocessed_word = self.ps.stem(word)
+                # removing the stop words from the sentence.
+                if preprocessed_word not in self.stop_words:
+                    preprocessed += preprocessed_word + " "
         return preprocessed
 
     @staticmethod
@@ -108,7 +107,7 @@ class NltkPreprocessor:
         :return: The author's name.
         """
         if len(author) > 2:
-            return author[2][4:-1]
+            return author[3][4:-1]
         else:
             return "ANONYMOUS_AUTHOR"
 
@@ -129,6 +128,10 @@ class NltkPreprocessor:
         self.preprocessed_dates = [date[0]
                                    for date in
                                    self.non_preprocessed_authors]
+        # Taking the first element of each row and storing it in the self.preprocessed_dates array.
+        self.preprocessed_links = [date[1]
+                                   for date in
+                                   self.non_preprocessed_authors]
         # Taking the author's name from the list of strings that is the author's name, the title and the date.
         self.preprocessed_authors = [self.preprocess_author(author)
                                      for author in
@@ -142,12 +145,12 @@ class NltkPreprocessor:
         # If we only want to make a csv file, we don't need to preprocess the text.
         if self.make_csv_only:
             # Taking the second element of each row and storing it in the self.preprocessed_titles array.
-            self.preprocessed_titles = [title[1]
+            self.preprocessed_titles = [title[2]
                                         for title in
                                         self.non_preprocessed_authors]
         else:
             # Preprocessing the titles of the posts.
-            self.preprocessed_titles = [self.preprocess_one_piece_of_text(title[1])
+            self.preprocessed_titles = [self.preprocess_one_piece_of_text(title[2])
                                         for title in
                                         self.non_preprocessed_authors]
         # A progress bar.
@@ -176,11 +179,14 @@ class NltkPreprocessor:
         It writes the output of the program to a file.
         """
         # Creating a dataframe from the data that we have preprocessed.
-        result = pd.DataFrame(data={"hash": self.ids,
+        result = pd.DataFrame(data={
+                                    "hash": self.ids,
                                     "Date": self.preprocessed_dates,
+                                    "Author": self.preprocessed_authors,
+                                    "Link": self.preprocessed_links,
                                     "Title": self.preprocessed_titles,
-                                    "Content": self.preprocessed_contents,
-                                    "Author": self.preprocessed_authors}
+                                    "Content": self.preprocessed_contents
+                                    }
                               )
         # Writing the preprocessed data to a csv file.
         preprocessed_label = ""

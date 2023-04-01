@@ -10,6 +10,8 @@ from bs4 import BeautifulSoup
 from lxml.html.soupparser import fromstring
 from requests import get
 
+from preprocessors.html_sanitizer import sanitize_for_html_tags
+
 
 class Crawler:
 
@@ -44,7 +46,8 @@ class Crawler:
             else:
                 print(ConnectionError(response), file=sys.stderr)
                 return ""
-        except Exception:
+        except Exception as ex:
+            print(ex)
             return ""
 
     def get_robots_txt(self):
@@ -142,7 +145,6 @@ class Crawler:
         It crawls all cached the sites.
         """
         # Checking if the list of html sites is empty, and if it is, it raises an exception.
-
         if "urls_to_crawl.txt" in os.listdir(self.output_dir):
             with open(self.output_dir + "/urls_to_crawl.txt", mode="r+", encoding="utf-8") as reader:
                 self.html_sites = reader.readlines()
@@ -162,8 +164,10 @@ class Crawler:
                 print(title)
                 text_content = [i.replace("\n", " ") for i in text_content]
                 title = [i.replace("\n", " ") for i in title]
+                text_content = [sanitize_for_html_tags(i) for i in text_content]
+                title = [sanitize_for_html_tags(i) for i in title]
                 out_writer.writelines(str(index) + ")" + str(hash(' '.join(title))) + "\n")
-                out_writer.writelines(datum + "|" + ' '.join(title) + "\n")
+                out_writer.writelines(datum + "|" + site_url.replace("\n", "") + "|" + ' '.join(title) + "\n")
                 out_writer.writelines(' '.join(text_content) + "\n")
 
     def crawl_one_site(self, site) -> tuple:

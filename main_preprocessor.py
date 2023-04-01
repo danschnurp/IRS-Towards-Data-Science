@@ -40,6 +40,9 @@ if __name__ == '__main__':
                         help='reformat to csv only? True/False')
     args = parser.parse_args()
 
+    if not os.path.isfile(args.input_file_path):
+        raise "bad input_file_path..."
+
     # Checking if the venv folder is in the parent directory, and if the nltk_data folder is in the venv folder. If not,
     # it downloads the stopwords and punkt packages from nltk.
     download_nltk()
