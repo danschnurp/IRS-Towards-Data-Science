@@ -2,6 +2,7 @@
 #  author: Daniel Schnurpfeil
 #
 import sys
+from copy import copy
 
 import numpy as np
 import pandas as pd
@@ -14,13 +15,15 @@ class NltkPreprocessor:
 
         self.f_name, self.stop_words, self.ps = f_name, stop_words, ps
         self.make_csv_only = make_csv_only
-        
+
         # Reading the csv file and storing it in a dataframe.
         df = pd.read_csv(self.f_name, header=None, sep='\0', low_memory=True)
 
         # Taking the values from the dataframe and storing them in arrays.
-        self.preprocessed_contents = np.squeeze(df.values[2:len(df.values):3])
-        self.preprocessed_authors = np.squeeze(df.values[1:len(df.values):3])
+        self.non_preprocessed_contents = np.squeeze(df.values[2:len(df.values):3])
+        self.non_preprocessed_authors = np.squeeze(df.values[1:len(df.values):3])
+        self.preprocessed_contents = np.zeros(int(len(df) / 3), dtype=list)
+        self.preprocessed_authors = np.zeros(int(len(df) / 3), dtype=list)
         self.preprocessed_titles = np.zeros(int(len(df) / 3), dtype=list)
         self.preprocessed_dates = np.zeros(int(len(df) / 3), dtype=list)
 
@@ -31,6 +34,7 @@ class NltkPreprocessor:
         # The number of steps that the progress bar will have.
         self.toolbar_width = 25
         self.use_progressbar = True
+        self.counter = 0
         if len(self.preprocessed_authors) < self.toolbar_width:
             self.use_progressbar = False
 
@@ -64,66 +68,74 @@ class NltkPreprocessor:
         2. Remove stop words
         3. Stem the words
         4. Join the words back into a sentence
+
+        and it is extremely SLOW 😑
     
         :param sentence: the text you want to preprocess
         :type sentence: str
         """
 
+        if self.use_progressbar:
+            self.counter += 1
+            if self.counter % int((len(self.preprocessed_authors) / self.toolbar_width)) == 0:
+                sys.stdout.write("-")
+                sys.stdout.flush()
+
         word_tokens = word_tokenize(sentence)
-
-        # A list comprehension that is removing the stop words from the sentence.
-        filtered_sentence = [w for w in word_tokens if not w in set(self.stop_words)]
-
+        # removing the stop words from the sentence.
+        filtered_sentence = list(filter(lambda item: item not in self.stop_words, word_tokens))
         # Splitting the sentence into words and then stemming each word.
-        preprocessed = []
-        for word in filtered_sentence:
-            preprocessed.append(self.ps.stem(word))
+        preprocessed = [self.ps.stem(word) for word in filtered_sentence]
         return preprocessed
 
+    @staticmethod
+    def preprocess_author(author):
+        if len(author) > 2:
+            return author[2][4:-1]
+        else:
+            return "ANONYMOUS_AUTHOR"
+
     def preprocess_all(self):
-        # setup toolbar
+
+        self.ids = [one_id.split(")")[1] for one_id in self.ids]
+
+        self.non_preprocessed_authors = [self.filter_common_title_parts_from_towards_data_science(title_author)
+                                         for title_author in self.non_preprocessed_authors]
+
+        self.non_preprocessed_authors = [title_author.split("|")
+                                         for title_author in
+                                         self.non_preprocessed_authors]
+        self.preprocessed_dates = [date[0]
+                                   for date in
+                                   self.non_preprocessed_authors]
+        self.preprocessed_authors = [self.preprocess_author(author)
+                                     for author in
+                                     self.non_preprocessed_authors]
+        print("preprocessing titles")
         sys.stdout.write("[%s]" % (" " * self.toolbar_width))
         sys.stdout.flush()
         sys.stdout.write("\b" * (self.toolbar_width + 1))
-
-        # Iterating over the titles and contents array and preprocessing each element.
-        for counter, title_author, content, one_id in zip(range(len(self.ids)), self.preprocessed_authors,
-                                                          self.preprocessed_contents,
-                                                          self.ids):
-            if self.use_progressbar:
-                if counter % int((len(self.preprocessed_authors) / self.toolbar_width)) == 0:
-                    sys.stdout.write("-")
-                    sys.stdout.flush()
-            if counter == len(self.preprocessed_authors):
-                break
-
-            self.ids[counter] = one_id.split(")")[1]
-
-            # Preprocessing the content of the article.
-            if self.make_csv_only:
-                self.preprocessed_contents[counter] = self.filter_common_sentences_from_towards_data_science(content)
-            else:
-                self.preprocessed_contents[counter] = self.preprocess_one_piece_of_text(
-                    self.filter_common_sentences_from_towards_data_science(content))
-
-            title_author = self.filter_common_title_parts_from_towards_data_science(title_author)
-            split = title_author.split("|")
-            # Removing the "by " and the " " from the author name.
-            if len(split) > 2:
-                self.preprocessed_authors[counter] = split[2][4:-1]
-            else:
-                self.preprocessed_authors[counter] = "ANONYMOUS_AUTHOR"
-                # Preprocessing the title of the article.
-            try:
-                if self.make_csv_only:
-                    self.preprocessed_titles[counter] = split[1]
-                else:
-                    self.preprocessed_titles[counter] = self.preprocess_one_piece_of_text(split[1])
-            except IndexError:
-                raise "Ups, input data are malformed."
-
-            self.preprocessed_dates[counter] = split[0]
-
+        if self.make_csv_only:
+            self.preprocessed_titles = [title[1]
+                                        for title in
+                                        self.non_preprocessed_authors]
+        else:
+            self.preprocessed_titles = [self.preprocess_one_piece_of_text(title[1])
+                                        for title in
+                                        self.non_preprocessed_authors]
+        sys.stdout.write("]")
+        sys.stdout.flush()
+        print("\npreprocessing contents")
+        sys.stdout.write("[%s]" % (" " * self.toolbar_width))
+        sys.stdout.flush()
+        sys.stdout.write("\b" * (self.toolbar_width + 1))
+        if self.make_csv_only:
+            self.preprocessed_contents = [self.filter_common_sentences_from_towards_data_science(content)
+                                          for content in self.non_preprocessed_contents]
+        else:
+            self.preprocessed_contents = [self.preprocess_one_piece_of_text(
+                self.filter_common_sentences_from_towards_data_science(content))
+                for content in self.non_preprocessed_contents]
         sys.stdout.write("]")
         sys.stdout.flush()
 

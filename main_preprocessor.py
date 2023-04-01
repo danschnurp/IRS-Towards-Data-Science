@@ -53,8 +53,6 @@ if __name__ == '__main__':
     preprocessor = NltkPreprocessor(args.input_file_path, stop_words, ps, make_csv_only=args.make_csv_only)
 
     t1 = time.time()
-    print("starting...")
-    print("preprocessing:" + " " * 14 + "\\/")
     # Preprocessing the data.
     preprocessor.preprocess_all()
     print()
