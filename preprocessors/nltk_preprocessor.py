@@ -2,7 +2,6 @@
 #  author: Daniel Schnurpfeil
 #
 import sys
-from copy import copy
 
 import numpy as np
 import pandas as pd
@@ -106,7 +105,7 @@ class NltkPreprocessor:
         :param author: The author of the post
         :return: The author's name.
         """
-        if len(author) > 2:
+        if len(author) > 3:
             return author[3][4:-1]
         else:
             return "ANONYMOUS_AUTHOR"
