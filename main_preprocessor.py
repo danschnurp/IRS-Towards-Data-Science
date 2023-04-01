@@ -46,6 +46,7 @@ if __name__ == '__main__':
     from nltk.corpus import stopwords
     from nltk.stem import PorterStemmer
 
+    # Creating a list of stop words and a stemmer.
     stop_words = stopwords.words('english')
     ps = PorterStemmer()
 
