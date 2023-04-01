@@ -141,13 +141,12 @@ class NltkPreprocessor:
 
     def write_output(self):
 
-        result = pd.DataFrame(data=np.array([self.ids,
-                                             self.preprocessed_dates,
-                                             self.preprocessed_titles,
-                                             self.preprocessed_contents,
-                                             self.preprocessed_authors
-                                             ]).T,
-                              columns=["hash", "Date", "Title", "Content", "Author"])
+        result = pd.DataFrame(data={"hash": self.ids,
+                                    "Date": self.preprocessed_dates,
+                                    "Title": self.preprocessed_titles,
+                                    "Content": self.preprocessed_contents,
+                                    "Author": self.preprocessed_authors}
+                                             )
         preprocessed_label = ""
         if not self.make_csv_only:
             preprocessed_label = "preprocessed_"
