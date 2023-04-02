@@ -33,6 +33,6 @@ if __name__ == '__main__':
         indexed_titles = index_data(df["Title"])
         print(indexed_titles)
     if args.index_contents:
-        indexed_contents = index_data(df["Title"])
+        indexed_contents = index_data(df["Content"])
         print(indexed_contents)
 

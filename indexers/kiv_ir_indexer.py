@@ -24,13 +24,16 @@ def index_data(data: list):
         if len(val) > 1:
             # Converting the list to a numpy array and then squeezing it.
             val_numpied = np.squeeze(np.array([val]))
-            val_numpied.sort()
+
             # Counting the number of times a word appears in a document.
             unique, counts = np.unique(val_numpied, return_counts=True)
-            advanced_index[key] = dict(zip(unique, counts))
+            advanced_index[key] = {"doc_id": list(unique),
+                                   # weighted term frequency
+                                   "term_frequency": list(1 + np.log(counts)),
+                                   # Calculating the inverse document frequency.
+                                   "inverted_doc_frequency": np.log(len(simple_index) / len(unique))}
         # If the word only appears once in the document, it is added to the dictionary with the value 1.
         else:
             advanced_index[key] = {val[0]: 1}
 
     return advanced_index
-

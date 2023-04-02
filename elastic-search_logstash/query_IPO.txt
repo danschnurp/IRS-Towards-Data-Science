@@ -1,8 +1,0 @@
-GET datascience/_search
-{
-  "query": {
-    "match": {
-      "Title": "IPO"
-    }
-  }
-}
