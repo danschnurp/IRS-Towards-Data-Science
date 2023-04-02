@@ -11,7 +11,7 @@
 
 - usage: `python ./web_app/manage.py runserver`
 
-in progress:
+in progress
 
 
 
@@ -62,3 +62,17 @@ options:
 ```
 
 ### Indexer (inverted index creator)
+
+- usage: `python main_indexer.py`
+
+```
+usage: main_indexer.py [-h] -i INPUT_FILE_PATH [-t INDEX_TITLES] [-c INDEX_CONTENTS]
+
+Simple indexer
+
+options:
+  -h, --help            show this help message and exit
+  -i INPUT_FILE_PATH, --input_file_path INPUT_FILE_PATH
+  -t INDEX_TITLES, --index_titles INDEX_TITLES
+  -c INDEX_CONTENTS, --index_contents INDEX_CONTENTS
+```
