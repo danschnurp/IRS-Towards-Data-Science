@@ -73,6 +73,6 @@ Simple indexer
 options:
   -h, --help            show this help message and exit
   -i INPUT_FILE_PATH, --input_file_path INPUT_FILE_PATH
-  -t INDEX_TITLES, --index_titles INDEX_TITLES
-  -c INDEX_CONTENTS, --index_contents INDEX_CONTENTS
+  -t INDEX_TITLES, --index_titles INDEX_TITLES True/False
+  -c INDEX_CONTENTS, --index_contents INDEX_CONTENTS True/False
 ```
