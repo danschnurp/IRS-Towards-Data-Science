@@ -1,6 +1,7 @@
 from unittest import TestCase
 
 from indexers.kiv_ir_indexer import index_data
+from indexers.similarity_ranking import count_cosine_similarity
 
 
 class Test(TestCase):
@@ -16,4 +17,5 @@ class Test(TestCase):
 
         queries = {"q1": "tropical fish sea",
                    "q2": "tropical fish"}
-        print()
+        count_cosine_similarity(queries["q1"], indexed_data)
+        count_cosine_similarity(queries["q2"], indexed_data)

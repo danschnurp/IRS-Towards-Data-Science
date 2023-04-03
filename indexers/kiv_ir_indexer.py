@@ -31,9 +31,13 @@ def index_data(data: list):
                                    # weighted term frequency
                                    "term_frequency": list(1 + np.log(counts)),
                                    # Calculating the inverse document frequency.
-                                   "inverted_doc_frequency": np.log(len(simple_index) / len(unique))}
+                                   "inverted_doc_frequency": np.log(len(simple_index) / len(unique)),
+                                   "tf-idf": list((1 + np.log(counts)) * np.log(len(simple_index) / len(unique)))
+                                   }
         # If the word only appears once in the document, it is added to the dictionary with the value 1.
         else:
-            advanced_index[key] = {val[0]: 1}
+            advanced_index[key] = {"doc_id": [val[0]], "term_frequency": 1 + np.log(1),
+                                   "inverted_doc_frequency": np.log(len(simple_index)),
+                                   "tf-idf": [(1 + np.log(1)) * np.log(len(simple_index))]}
 
     return advanced_index
