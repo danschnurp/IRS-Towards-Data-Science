@@ -5,7 +5,26 @@ import sys
 
 import numpy as np
 import pandas as pd
+from nltk import PorterStemmer
+from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+
+
+def preprocess_query(sentence: str,
+                     # Creating a list of stop words and a stemmer.
+                     stop_words=stopwords.words('english'),
+                     ps=PorterStemmer()):
+    # It splits the sentence into words.
+    word_tokens = word_tokenize(sentence)
+    preprocessed = ""
+    # Splitting the sentence into words and then stemming each word.
+    for word in word_tokens:
+        if word not in stop_words:
+            preprocessed_word = ps.stem(word)
+            # removing the stop words from the sentence.
+            if preprocessed_word not in stop_words:
+                preprocessed += preprocessed_word + " "
+    return preprocessed
 
 
 # It takes a list of documents, applies a bunch of preprocessing steps, and returns a list of processed documents
@@ -179,14 +198,14 @@ class NltkPreprocessor:
         """
         # Creating a dataframe from the data that we have preprocessed.
         result = pd.DataFrame(data={
-                                    "hash": self.ids,
-                                    "Date": self.preprocessed_dates,
-                                    "Author": self.preprocessed_authors,
-                                    "Link": self.preprocessed_links,
-                                    "Title": self.preprocessed_titles,
-                                    "Content": self.preprocessed_contents
-                                    }
-                              )
+            "hash": self.ids,
+            "Date": self.preprocessed_dates,
+            "Author": self.preprocessed_authors,
+            "Link": self.preprocessed_links,
+            "Title": self.preprocessed_titles,
+            "Content": self.preprocessed_contents
+        }
+        )
         # Writing the preprocessed data to a csv file.
         preprocessed_label = ""
         if not self.make_csv_only:
