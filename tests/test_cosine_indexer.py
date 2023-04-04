@@ -18,4 +18,5 @@ class Test(TestCase):
         queries = {"q1": "tropical fish sea",
                    "q2": "tropical fish"}
         count_cosine_similarity(queries["q1"], indexed_data)
+        print()
         count_cosine_similarity(queries["q2"], indexed_data)

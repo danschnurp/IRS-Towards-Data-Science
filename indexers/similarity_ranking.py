@@ -20,7 +20,8 @@ def count_cosine_similarity(query: str, indexed_data):
             else:
                 scores[doc_id].append(tf_idf)
     for i in scores:
-        scores[i] = np.sum(scores[i]) / len(scores[i])
+        # print(i, np.sum(scores[i]) / len(scores[i]), np.sum(scores[i]) / np.sum(np.square(scores[i])))
+        scores[i] = np.sum(scores[i]) / np.sum(np.square(scores[i]))
     scores = {k: v for k, v in sorted(scores.items(), key=lambda item: item[1])}
     print(scores)
 
