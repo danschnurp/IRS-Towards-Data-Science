@@ -6,8 +6,9 @@ import numpy as np
 
 def index_data(data: list):
     """
-    creates inverted index
-    :param data: list
+    The function "index_data" takes in a list of data as input.
+
+    :param data: The parameter "data" is a list that contains the data that needs to be indexed
     :type data: list
     """
     simple_index = {}

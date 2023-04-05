@@ -1,9 +1,11 @@
 
 def sanitize_for_html_tags(html_string):
     """
-    escapes html patterns in document
-    :param html_string: input string
-    :return: 
+    The function sanitizes a given HTML string by replacing certain characters with their corresponding HTML escape codes.
+
+    :param html_string: The input string that may contain characters that need to be escaped for use in HTML tags
+    :return: the sanitized version of the input `html_string` where certain characters have been replaced with their
+    corresponding HTML escape codes.
     """
     escapes = {'\"': '&quot;',
                '\'': '&#39;',
