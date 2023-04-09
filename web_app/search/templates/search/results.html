@@ -1,0 +1,30 @@
+{% extends 'search/base.html' %}
+{% block results_of_the_search %}
+
+
+<h3 >Results of query:</h3>
+<h5 class="mb-5">{{ query }}</h5>
+<div class="accordion" id="accordionExample">
+  <div class="accordion-item">
+
+  </div>
+{% for result in results %}
+    <div class="accordion-item">
+    <h2 class="accordion-header" id={{result.title}}>
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target=#{{result.hash}}  aria-expanded="false" aria-controls={{result.hash}}>
+         <strong>  {{result.title}} </strong> &nbsp;  by {{result.author}} &nbsp; {{result.date}}
+      </button>
+    </h2>
+    <div id={{result.hash}} class="accordion-collapse collapse show" aria-labelledby="{{result.title}}" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+          <p><a href={{result.link}}>{{result.link}}</a></p>
+
+<p>{{result.content}} </p>
+
+      </div>
+
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}

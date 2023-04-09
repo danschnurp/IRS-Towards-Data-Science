@@ -1,24 +1,24 @@
 {% extends 'search/base.html' %}
 {% block search_manager %}
-<form method="get">
+
     <div class="row">
         <div class="col-xl-9 mx-auto" >
-            <h3 >Search engine</h3>
+            <h1 >Search engine</h1>
             <h5 class="mb-5">(Information Retrieval System) of Towards Data Science posts</h5>
-        </div>
-        <div class="col-md-10 col-lg-8 col-xl-7 mx-auto">
-            <div class="form-row">
-                <div class="col-12 col-md-9 mb-2 mb-md-0"><textarea class="form-control" name="search_text"
-                                                                    placeholder="Django or flask that is the question 🤔"></textarea>
-                </div>
-                <div class="col-12 col-md-3">
-                    <button class="btn btn-primary btn-block btn-lg" style="height: 64px;" type="submit">
-                        Search
-                    </button>
-                    <br> <br>
-                </div>
-            </div>
+
+                                  <form class="d-flex" role="search">
+        <input class="form-control me-3"  name="search_text"
+               type="search" placeholder="Django or flask that is the question 🤔" aria-label="Search">
+        <button class="btn btn-primary" type="submit">Search</button>
+
+      </form>
+<br>
+
+
         </div>
     </div>
-</form>
+
+
+
+
 {% endblock %}

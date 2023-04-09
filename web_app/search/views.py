@@ -9,42 +9,54 @@ from web_app.search.apps import SearchConfig
 
 
 def index(request):
-    """
-    Index view controller
-
-    :param request: http request object
-    :return: rendered page
-    """
-
-    if "search_text" in request.GET.keys():
-        search(request.GET["search_text"])
-
+    results = _search_text(request)
+    if len(results) > 0:
+        return render(request, "search/results.html", context={"display_search": True,
+                                                               "query": request.GET["search_text"],
+                                                               "results": results})
     return render(request, "search/index.html", None)
 
 
 def indexer(request):
-    """
-    Index view controller
-
-    :param request: http request object
-    :return: rendered page
-    """
-    if "index_url" in request.GET.keys():
-        index_url(request.GET["index_url"])
-
+    _search_text(request)
+    _index_another_url(request)
     return render(request, "search/indexer.html", context={"display_search": True})
 
 
-def search(query):
+def _search_text(request):
+    if "search_text" in request.GET.keys():
+        if len(request.GET["search_text"]) > 0:
+            return __search(request.GET["search_text"])
+        else:
+            return []
+    else:
+        return []
 
+
+def _index_another_url(request):
+    if "index_url" in request.GET.keys():
+        if len(request.GET["index_url"]) > 0:
+            _index_url(request.GET["index_url"])
+
+
+def __search(query):
+    """
+    The function takes a query as input and performs a search operation.
+
+    :param query: The query parameter is a string that represents the search query
+    """
     query = sanitize_for_html_tags(query)
     docs_ids, _ = count_cosine_similarity(query, SearchConfig.indexed_titles)
-    result = []
+    results = []
     for i in docs_ids:
-        result.append(SearchConfig.original_data[docs_ids])
+        row = SearchConfig.original_data.iloc[i]
+        results.append({"date": row["Date"], "title": row["Title"], "hash": row["hash"],
+                        "content": row["Content"][:300] + "...", "author": row["Author"], "link": row["Link"]})
+
+    return results
 
 
-def index_url(url_to_index):
+def _index_url(url_to_index):
     """
     The function takes a URL as input todo not have any code implemented yet.
 

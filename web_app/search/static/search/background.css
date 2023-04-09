@@ -24,5 +24,13 @@
   overflow-x: auto;
 }
 
+body {
+  background-color: white;
+  color: black;
+}
 
+.dark-mode {
+  background-color: rgba(4, 29, 35, 1);
+  color: white;
+}
 
