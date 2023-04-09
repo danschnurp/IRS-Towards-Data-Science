@@ -1,20 +1,21 @@
-{% extends 'search/base.html' %}
-{% block index_manager %}
-    <div class="row">
-        <div class="col-xl-9 mx-auto" >
-            <h1 >Put New Data into Search Engine</h1>
-            <h5 class="mb-5"></h5>
+{% extends 'search/base.html' %} {% block index_manager %}
+<div class="row">
+  <div class="col-xl-9 mx-auto">
+    <h1>Put New Data into Search Engine</h1>
+    <h5 class="mb-5"></h5>
 
-                                  <form class="d-flex" role="search">
-        <input class="form-control me-3"  name="index_url"
-               type="search" placeholder="https://towardsdatascience.com/django-or-flask-recommendation-from-my-experience-60257b6b7ca6" aria-label="Search">
-        <button class="btn btn-primary" type="submit">Index URL</button>
-
-      </form>
-<br>
-
-
-        </div>
-    </div>
+    <form class="d-flex" role="search">
+      <input
+        class="form-control me-3"
+        name="index_url"
+        type="search"
+        placeholder="https://towardsdatascience.com/django-or-flask-recommendation-from-my-experience-60257b6b7ca6"
+        aria-label="Search"
+      />
+      <button class="btn btn-primary" type="submit">Index URL</button>
+    </form>
+    <br />
+  </div>
+</div>
 
 {% endblock %}
