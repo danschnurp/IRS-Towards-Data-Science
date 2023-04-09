@@ -46,6 +46,14 @@ def index_data(data: list):
 
 
 def save_to_json(advanced_index: dict, name: str):
+    """
+    This function saves a dictionary object to a JSON file with a specified name.
+
+    :param advanced_index: A dictionary containing advanced indexing information that needs to be saved to a JSON file
+    :type advanced_index: dict
+    :param name: The `name` parameter is a string that represents the name of the file where the JSON data will be saved
+    :type name: str
+    """
     from json import dumps
     from utils import make_output_dir
 
