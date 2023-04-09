@@ -31,14 +31,21 @@ def indexer(request):
 
 
 def index_url(url_to_index):
+    """
+    The function takes a URL as input and does not have any code implemented yet.
+
+    :param url_to_index: The parameter `url_to_index` is a string that represents the URL of a webpage that needs to be
+    indexed
+    """
 
     sanitized = re.findall(r"https://towardsdatascience\.com/[a-z\-\d]+", url_to_index)
-
     if len(sanitized) == 1:
-
         title, text_content = SearchConfig.crawler.crawl_one_site(sanitized[0])
         if title == "failed":
+            # todo print user that it failed
             print(sanitized[0], "failed")
+        # The code is performing some preprocessing on the `text_content` and `title` variables before they are added to
+        # the index.
         text_content = [i.replace("\n", " ") for i in text_content]
         title = [i.replace("\n", " ") for i in title]
         text_content = [sanitize_for_html_tags(i) for i in text_content]
