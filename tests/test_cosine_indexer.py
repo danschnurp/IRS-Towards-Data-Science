@@ -10,8 +10,8 @@ class Test(TestCase):
 
     def setUp(self) -> None:
         """
-        This function sets up data for testing by reading preprocessed and original data files and storing relevant columns
-        in variables.
+        This function sets up data for testing by reading preprocessed and original data files and storing relevant
+        columns in variables.
         """
         super().setUp()
         self.df = pd.read_csv("../preprocessed_data/preprocessed_content2023_04_01_17_10.csv",

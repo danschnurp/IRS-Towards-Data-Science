@@ -6,7 +6,7 @@ import os
 
 import pandas as pd
 
-from indexers.kiv_ir_indexer import index_data
+from indexers.kiv_ir_indexer import index_data, save_to_json
 
 if __name__ == '__main__':
 
@@ -31,8 +31,9 @@ if __name__ == '__main__':
                      low_memory=True)
     if args.index_titles:
         indexed_titles = index_data(df["Title"])
-        print(indexed_titles)
+        save_to_json(index_data(indexed_titles), "titles.JSON")
     if args.index_contents:
         indexed_contents = index_data(df["Content"])
-        print(indexed_contents)
+        save_to_json(index_data(indexed_contents), "contents.JSON")
+
 

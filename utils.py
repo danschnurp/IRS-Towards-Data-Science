@@ -16,4 +16,4 @@ def make_output_dir(output_filename="crawled_data", output_dir="./") -> str:
             output_dir += "/"
         os.mkdir(output_dir + output_filename)
     output_dir += output_filename
-    return output_dir
+    return os.path.abspath(output_dir)

@@ -175,3 +175,4 @@ web_app/frontend/towards_data_science/typings
 .DS_Store
 Thumbs.db
 /web_app/frontend/towards_data_science/node_modules/
+indexed_data/
