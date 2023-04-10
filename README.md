@@ -11,9 +11,9 @@
 
 - usage: `python ./web_app/manage.py runserver`
 
-in progress
+**in progress**
 
-
+![alt text](imgs/usecase.gif)
 
 
 
