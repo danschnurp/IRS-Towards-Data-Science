@@ -7,7 +7,7 @@
       (Information Retrieval System) of Towards Data Science posts
     </h5>
 
-    <form class="d-flex" role="search">
+    <form  role="search"> <div class="d-flex">
       <input
         class="form-control me-3"
         name="search_text"
@@ -16,6 +16,34 @@
         aria-label="Search"
       />
       <button class="btn btn-primary" type="submit">Search</button>
+      </div>
+     <br>
+      <div >
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="search_by" id="inlineRadio1" value="Titles" checked>
+  <label class="form-check-label" for="inlineRadio1">by Title</label>
+</div>
+<div class="form-check form-check-inline">
+  <input class="form-check-input" type="radio" name="search_by" id="inlineRadio2" value="Dates">
+  <label class="form-check-label" for="inlineRadio2">by Content</label>
+</div>
+      </div>
+           <br>
+      <div >
+
+              <div class="form-check form-check-inline">
+
+                 <label class="form-check-label">by Date</label>
+
+
+
+      </div>
+        <input id="start_date"  name="start_date" class="form-input-inline" for="inlineRadio2" type="date"/>
+
+         <label class="form-check-label" for="start_date"> ⬅️➡️  </label>
+
+         <input id="end_date"  name="end_date" class="form-input-inline" for="inlineRadio2" type="date"/>
+      </div>
     </form>
     <br />
   </div>

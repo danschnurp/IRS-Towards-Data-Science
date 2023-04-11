@@ -2,6 +2,11 @@
 
 <h3>Results of query:</h3>
 <h5 class="mb-5">{{ query }}</h5>
+
+  {% if results.0 == 'not found' %}
+{{  results.0 }}
+
+{% else %}
 <div class="accordion" id="accordionExample">
   <div class="accordion-item"></div>
   {% for result in results %}
@@ -15,8 +20,8 @@
         aria-expanded="false"
         aria-controls="{{result.hash}}"
       >
-        <strong> {{result.title}} </strong> &nbsp; by {{result.author}} &nbsp;
-        {{result.date}}
+        <strong> {{result.title}} </strong> &nbsp; by &nbsp;<strong>  {{result.author}} </strong> &nbsp;
+        on &nbsp;<strong> {{result.date}} </strong>
       </button>
     </h2>
     <div
@@ -33,5 +38,6 @@
     </div>
   </div>
   {% endfor %}
+    {% endif %}
 </div>
 {% endblock %}
