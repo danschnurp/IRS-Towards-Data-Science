@@ -16,10 +16,10 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--input_file_path',
                         required=True)
     parser.add_argument('-t', '--index_titles',
-                        default=False, type=bool,
+                        default=True, type=bool,
                         )
     parser.add_argument('-c', '--index_contents',
-                        default=False, type=bool,
+                        default=True, type=bool,
                         )
     args = parser.parse_args()
 
@@ -31,9 +31,7 @@ if __name__ == '__main__':
                      low_memory=True)
     if args.index_titles:
         indexed_titles = index_data(df["Title"])
-        save_to_json(index_data(indexed_titles), "titles.JSON")
+        save_to_json(indexed_titles, "titles.JSON", "./")
     if args.index_contents:
         indexed_contents = index_data(df["Content"])
-        save_to_json(index_data(indexed_contents), "contents.JSON")
-
-
+        save_to_json(indexed_contents, "contents.JSON", "./")

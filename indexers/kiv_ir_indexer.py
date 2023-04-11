@@ -45,7 +45,7 @@ def index_data(data: list):
     return advanced_index
 
 
-def save_to_json(advanced_index: dict, name: str):
+def save_to_json(advanced_index: dict, name: str, output_dir: str):
     """
     This function saves a dictionary object to a JSON file with a specified name.
 
@@ -57,6 +57,6 @@ def save_to_json(advanced_index: dict, name: str):
     from json import dumps
     from utils import make_output_dir
 
-    directory = make_output_dir("indexed_data", output_dir="../")
+    directory = make_output_dir("indexed_data", output_dir="./")
     with open(directory + "/" + name, mode="w") as out:
         out.write(dumps(advanced_index))
