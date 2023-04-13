@@ -1,9 +1,8 @@
-
 from django.shortcuts import render
 
-from search.add_index import _index_another_url
-from search.apps import SearchConfig
-from search.search import __search
+from .add_index import _index_another_url
+from .apps import SearchConfig
+from .search import __search
 
 
 def index(request):

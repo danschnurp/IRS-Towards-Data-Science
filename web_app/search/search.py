@@ -1,3 +1,5 @@
+from time import mktime
+
 from django.db.models.functions import Cast
 from django.forms import DurationField
 
@@ -19,7 +21,7 @@ def __search(query, search_by=SearchConfig.indexed_titles, start_date="", end_da
     if len(start_date) > 0:
         start_date = parse_date(start_date)
     else:
-        start_date = parse_date('1900-01-01')
+        start_date = parse_date('1972-01-01')
     if len(end_date) > 0:
         end_date = parse_date(end_date)
     else:
@@ -31,10 +33,12 @@ def __search(query, search_by=SearchConfig.indexed_titles, start_date="", end_da
     query = sanitize_for_html_tags(query)
     docs_ids, _ = count_cosine_similarity(query, search_by, stem_query=True)
     results = []
+    date_range = range(int(mktime(start_date.timetuple()) / 21600.),
+                       int(mktime(end_date.timetuple()) / 21600.))
     for i in docs_ids:
         row = SearchConfig.original_data.iloc[i]
-        if int(parse_date(row["Date"]).strftime('%s')) in range(int(start_date.strftime('%s')),
-                                                                int(end_date.strftime('%s'))):
+
+        if int(mktime(parse_date(row["Date"]).timetuple()) / 21600.) in date_range:
             results.append({"date": row["Date"], "title": row["Title"], "hash": row["hash"],
                             "content": row["Content"][:300] + "...",
                             "author": row["Author"], "link": row["Link"]})
