@@ -1,7 +1,7 @@
 
 from django.shortcuts import render
 
-from search.add_index import _index_another_url
+from search.add_index import _index_url
 from search.apps import SearchConfig
 from search.search import __search
 
@@ -16,12 +16,23 @@ def index(request):
 
 
 def indexer(request):
+    """
+    The function "indexer" is defined and takes a request object as an argument.
+
+    :param request: The `request` parameter in a Django view function is an object that contains information about the
+    current HTTP request, such as the user agent, the requested URL, any submitted data, and the user session. It is an
+    instance of the `HttpRequest` class. The `request` object is passed as
+    """
+    #  adds url to indexed sites
+    if "index_url" in request.GET.keys():
+        if len(request.GET["index_url"]) > 0:
+            _index_url(request.GET["index_url"])
+
     results = _search_text(request)
     if len(results) > 0:
         return render(request, "search/results.html", context={"display_search": True,
                                                                "query": request.GET["search_text"],
                                                                "results": results})
-    _index_another_url(request)
     return render(request, "search/indexer.html", context={"display_search": True})
 
 

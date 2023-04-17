@@ -5,6 +5,9 @@ from crawlers.crawler import Crawler
 
 import json
 
+from main_preprocessor import download_nltk
+from nltk_preprocessor import NltkPreprocessor
+
 
 class SearchConfig(AppConfig):
     name = 'search'
@@ -19,4 +22,17 @@ class SearchConfig(AppConfig):
     print("READING indexed titles")
     with open("indexed_data/titles.JSON") as f:
         indexed_titles = json.loads(f.read())
+
+    # Checking if the venv folder is in the parent directory, and if the nltk_data folder is in the venv folder. If not,
+    # it downloads the stopwords and punkt packages from nltk.
+    download_nltk()
+    from nltk.corpus import stopwords
+    from nltk.stem import PorterStemmer
+
+    # Creating a list of stop words and a stemmer.
+    stop_words = stopwords.words('english')
+    ps = PorterStemmer()
+
+    # Creating an instance of the NltkPreprocessor class.
+    preprocessor = NltkPreprocessor("", stop_words, ps, make_csv_only=False)
 

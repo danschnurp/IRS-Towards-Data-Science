@@ -4,15 +4,18 @@
 import numpy as np
 
 
-def index_data(data: list):
+def index_data(data: list, existing_index=None):
     """
     The function "index_data" takes in a list of data as input.
 
+    :param existing_index: for case to addd url to index
     :param data: The parameter "data" is a list that contains the data that needs to be indexed
     :type data: list
     """
+    if existing_index is None:
+        existing_index = {}
     simple_index = {}
-    advanced_index = {}
+    advanced_index = existing_index
     # Creating a dictionary with the words as keys and the indices of the documents as values.
     for index, i in enumerate(data):
         for j in i.split():

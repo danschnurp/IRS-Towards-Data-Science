@@ -36,29 +36,30 @@ class NltkPreprocessor:
         self.f_name, self.stop_words, self.ps = f_name, set(stop_words), ps
         self.make_csv_only = make_csv_only
 
-        # Reading the csv file and storing it in a dataframe.
-        df = pd.read_csv(self.f_name, header=None, sep='\0', low_memory=True)
+        if self.f_name != "":
+            # Reading the csv file and storing it in a dataframe.
+            df = pd.read_csv(self.f_name, header=None, sep='\0', low_memory=True)
 
-        # Taking the values from the dataframe and storing them in arrays.
-        self.non_preprocessed_contents = np.squeeze(df.values[2:len(df.values):3])
-        self.non_preprocessed_authors = np.squeeze(df.values[1:len(df.values):3])
-        # Creating an empty array of lists.
-        self.preprocessed_contents = np.zeros(int(len(df) / 3), dtype=list)
-        self.preprocessed_authors = np.zeros(int(len(df) / 3), dtype=list)
-        self.preprocessed_titles = np.zeros(int(len(df) / 3), dtype=list)
-        self.preprocessed_dates = np.zeros(int(len(df) / 3), dtype=list)
-        self.preprocessed_links = np.zeros(int(len(df) / 3), dtype=list)
+            # Taking the values from the dataframe and storing them in arrays.
+            self.non_preprocessed_contents = np.squeeze(df.values[2:len(df.values):3])
+            self.non_preprocessed_authors = np.squeeze(df.values[1:len(df.values):3])
+            # Creating an empty array of lists.
+            self.preprocessed_contents = np.zeros(int(len(df) / 3), dtype=list)
+            self.preprocessed_authors = np.zeros(int(len(df) / 3), dtype=list)
+            self.preprocessed_titles = np.zeros(int(len(df) / 3), dtype=list)
+            self.preprocessed_dates = np.zeros(int(len(df) / 3), dtype=list)
+            self.preprocessed_links = np.zeros(int(len(df) / 3), dtype=list)
 
-        # Taking the first element of each row and storing it in the self.ids array.
-        self.ids = df.values[:len(df.values):3]
-        self.ids = np.squeeze(self.ids)
+            # Taking the first element of each row and storing it in the self.ids array.
+            self.ids = df.values[:len(df.values):3]
+            self.ids = np.squeeze(self.ids)
 
-        # The number of steps that the progress bar will have.
-        self.toolbar_width = 25
-        self.use_progressbar = True
-        self.counter = 0
-        if len(self.preprocessed_authors) < self.toolbar_width:
-            self.use_progressbar = False
+            # The number of steps that the progress bar will have.
+            self.toolbar_width = 25
+            self.use_progressbar = True
+            self.counter = 0
+            if len(self.preprocessed_authors) < self.toolbar_width:
+                self.use_progressbar = False
 
     @staticmethod
     def filter_common_sentences_from_towards_data_science(sentence: str) -> str:
@@ -95,13 +96,13 @@ class NltkPreprocessor:
         :param sentence: the text to be preprocessed
         :type sentence: str
         """
-
-        # A progress bar.
-        if self.use_progressbar:
-            self.counter += 1
-            if self.counter % int((len(self.preprocessed_authors) / self.toolbar_width)) == 0:
-                sys.stdout.write("-")
-                sys.stdout.flush()
+        if self.f_name != "":
+            # A progress bar.
+            if self.use_progressbar:
+                self.counter += 1
+                if self.counter % int((len(self.preprocessed_authors) / self.toolbar_width)) == 0:
+                    sys.stdout.write("-")
+                    sys.stdout.flush()
 
         # It splits the sentence into words.
         word_tokens = word_tokenize(sentence)
