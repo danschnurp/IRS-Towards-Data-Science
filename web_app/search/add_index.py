@@ -53,5 +53,5 @@ def _index_url(url_to_index: str):
         title = SearchConfig.preprocessor.preprocess_one_piece_of_text(title)
         text_content = SearchConfig.preprocessor.preprocess_one_piece_of_text(text_content)
 
-        index_data(text_content, SearchConfig.indexed_contents)
-        index_data(title, SearchConfig.indexed_titles)
+        index_data(text_content.split(" "), SearchConfig.indexed_contents)
+        index_data(title.split(" "), SearchConfig.indexed_titles)
