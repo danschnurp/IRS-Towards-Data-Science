@@ -9,10 +9,16 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import json
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import pandas as pd
+
+from crawlers.crawler import Crawler
+from main_preprocessor import download_nltk
+from preprocessors.nltk_preprocessor import NltkPreprocessor
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -25,7 +31,6 @@ SECRET_KEY = 'django-insecure-=f2j5aqj!0qg4q$kkc9@9%82m(-7*45@k#*v^q8uodatqh37hy
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -71,7 +76,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'towards_data_science.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -81,7 +85,6 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -124,3 +127,21 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+crawler = Crawler(output_dir="")
+
+INPUT_DATA = "content2023_04_01_17_10.csv"
+
+# Checking if the venv folder is in the parent directory, and if the nltk_data folder is in the venv folder. If not,
+# it downloads the stopwords and punkt packages from nltk.
+download_nltk()
+
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer
+
+# Creating a list of stop words and a stemmer.
+stop_words = stopwords.words('english')
+ps = PorterStemmer()
+
+# Creating an instance of the NltkPreprocessor class.
+preprocessor = NltkPreprocessor("", stop_words, ps, make_csv_only=False)

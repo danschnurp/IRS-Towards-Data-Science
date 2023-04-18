@@ -64,6 +64,6 @@ def save_to_json(advanced_index: dict, name: str, output_dir: str):
     from json import dumps
     from utils import make_output_dir
 
-    directory = make_output_dir("indexed_data", output_dir="./")
+    directory = make_output_dir(output_dir, output_dir="./")
     with open(directory + "/" + name, mode="w") as out:
         out.write(dumps(advanced_index))

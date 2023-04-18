@@ -1,10 +1,12 @@
-from copy import copy
 from re import findall
+
+import pandas as pd
 from django.utils.timezone import now
 
 from indexers.kiv_ir_indexer import index_data
 from preprocessors.html_sanitizer import sanitize_for_html_tags
-from web_app.search.apps import SearchConfig
+from web_app.search.models import save_titles, save_contents, save_original_data, save_preprocessed_data
+from web_app.towards_data_science.settings import preprocessor, crawler, INPUT_DATA
 
 
 def _index_url(url_to_index: str):
@@ -16,7 +18,7 @@ def _index_url(url_to_index: str):
 
     sanitized = findall(r"https://towardsdatascience\.com/[a-z\-\d]+", url_to_index)
     if len(sanitized) == 1:
-        title, text_content = SearchConfig.crawler.crawl_one_site(sanitized[0])
+        title, text_content = crawler.crawl_one_site(sanitized[0])
         if title == "failed":
             # todo print user that it failed
             print(sanitized[0], "failed")
@@ -31,17 +33,24 @@ def _index_url(url_to_index: str):
         title_author = ' '.join(title).split("|")
         title_hash = str(hash(title_author[0]))
         today_date = now().today().date()
-        title = SearchConfig.preprocessor.filter_common_title_parts_from_towards_data_science(title_author[0])
+        title = preprocessor.filter_common_title_parts_from_towards_data_science(title_author[0])
         author = title_author[1]
         if len(author) > 3:
             author = author[4:-1]
         else:
             author = "ANONYMOUS_AUTHOR"
-        text_content = SearchConfig.preprocessor. \
+        text_content = preprocessor. \
             filter_common_sentences_from_towards_data_science(' '.join(text_content))
-        original_data = SearchConfig.original_data
+
+        original_data = pd.read_csv("preprocessed_data/" + INPUT_DATA,
+                                    sep=";", header=0,
+                                    low_memory=True)
+        preprocessed_data = pd.read_csv("preprocessed_data/preprocessed_" + INPUT_DATA,
+                                        sep=";", header=0,
+                                        low_memory=True)
+
         original_data.index = original_data.index + 1
-        original_data.loc[-1] = [original_data.index,
+        original_data.loc[-1] = [original_data.index.stop, original_data.index.stop - 1,
                                  title_hash,
                                  today_date,
                                  author,
@@ -49,22 +58,19 @@ def _index_url(url_to_index: str):
                                  title,
                                  text_content]
 
-        SearchConfig.original_data = original_data
+        title = preprocessor.preprocess_one_piece_of_text(title)
+        text_content = preprocessor.preprocess_one_piece_of_text(text_content)
 
-        title = SearchConfig.preprocessor.preprocess_one_piece_of_text(title)
-        text_content = SearchConfig.preprocessor.preprocess_one_piece_of_text(text_content)
-
-        preprocessed_data = SearchConfig.preprocessed_data
         preprocessed_data.index = preprocessed_data.index + 1
-        preprocessed_data.loc[-1] = [preprocessed_data.index,
+        preprocessed_data.loc[-1] = [preprocessed_data.index.stop, preprocessed_data.index.stop - 1,
                                      title_hash,
                                      today_date,
                                      author,
                                      url_path,
                                      title,
                                      text_content]
+        save_original_data(original_data)
+        save_preprocessed_data(preprocessed_data)
 
-        SearchConfig.preprocessed_data = preprocessed_data
-
-        SearchConfig.indexed_titles = copy(index_data(SearchConfig.preprocessed_data["Title"]))
-        SearchConfig.indexed_contents = copy(index_data(SearchConfig.preprocessed_data["Content"]))
+        save_titles(index_data(preprocessed_data["Title"]))
+        save_contents(index_data(preprocessed_data["Content"]))

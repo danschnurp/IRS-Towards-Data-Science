@@ -31,7 +31,7 @@ if __name__ == '__main__':
                      low_memory=True)
     if args.index_titles:
         indexed_titles = index_data(df["Title"])
-        save_to_json(indexed_titles, "titles.JSON", "./")
+        save_to_json(indexed_titles, "titles.JSON", "indexed_data")
     if args.index_contents:
         indexed_contents = index_data(df["Content"])
-        save_to_json(indexed_contents, "contents.JSON", "./")
+        save_to_json(indexed_contents, "contents.JSON", "indexed_data")
