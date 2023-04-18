@@ -130,7 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 crawler = Crawler(output_dir="")
 
-INPUT_DATA = "content2023_04_18_14_45.csv"
+INPUT_DATA = "content2023_04_01_17_10.csv"
 
 # Checking if the venv folder is in the parent directory, and if the nltk_data folder is in the venv folder. If not,
 # it downloads the stopwords and punkt packages from nltk.
