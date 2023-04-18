@@ -4,25 +4,15 @@
 import numpy as np
 
 
-def index_data(data: list, existing_index=None):
+def index_data(data: list):
     """
     The function "index_data" takes in a list of data as input.
 
-    :param existing_index: for case to addd url to index
     :param data: The parameter "data" is a list that contains the data that needs to be indexed
     :type data: list
     """
-    if existing_index is None:
-        existing_index = {}
-    simple_index = {}
-    advanced_index = existing_index
-    # Creating a dictionary with the words as keys and the indices of the documents as values.
-    for index, i in enumerate(data):
-        for j in i.split():
-            if j not in simple_index:
-                simple_index[j] = [index]
-            else:
-                simple_index[j].append(index)
+    simple_index = _prepare_simple_index(data)
+    advanced_index = {}
     # creating a dictionary of dictionaries
     for key, val in zip(simple_index.keys(), simple_index.values()):
         if len(val) > 1:
@@ -43,9 +33,22 @@ def index_data(data: list, existing_index=None):
             advanced_index[key] = {"doc_id": [val[0]],
                                    "term_frequency": [(1 + np.log(1)).astype(int).astype(object)],
                                    "inverted_doc_frequency": [np.log(len(simple_index)).astype(float).astype(object)],
-                                   "tf-idf": [((1 + np.log(1)) * np.log(len(simple_index))).astype(float).astype(object)]}
+                                   "tf-idf": [
+                                       ((1 + np.log(1)) * np.log(len(simple_index))).astype(float).astype(object)]}
 
     return advanced_index
+
+
+def _prepare_simple_index(data):
+    simple_index = {}
+    # Creating a dictionary with the words as keys and the indices of the documents as values.
+    for index, i in enumerate(data):
+        for j in i.split():
+            if j not in simple_index:
+                simple_index[j] = [index]
+            else:
+                simple_index[j].append(index)
+    return simple_index
 
 
 def save_to_json(advanced_index: dict, name: str, output_dir: str):

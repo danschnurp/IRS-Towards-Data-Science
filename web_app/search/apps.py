@@ -6,7 +6,7 @@ from crawlers.crawler import Crawler
 import json
 
 from main_preprocessor import download_nltk
-from nltk_preprocessor import NltkPreprocessor
+from preprocessors.nltk_preprocessor import NltkPreprocessor
 
 
 class SearchConfig(AppConfig):
@@ -16,6 +16,9 @@ class SearchConfig(AppConfig):
     original_data = pd.read_csv("preprocessed_data/content2023_04_01_17_10.csv",
                                 sep=";", header=0,
                                 low_memory=True)
+    preprocessed_data = pd.read_csv("preprocessed_data/preprocessed_content2023_04_01_17_10.csv",
+                                    sep=";", header=0,
+                                    low_memory=True)
     print("READING indexed contents")
     with open("indexed_data/contents.JSON") as f:
         indexed_contents = json.loads(f.read())
@@ -35,4 +38,3 @@ class SearchConfig(AppConfig):
 
     # Creating an instance of the NltkPreprocessor class.
     preprocessor = NltkPreprocessor("", stop_words, ps, make_csv_only=False)
-

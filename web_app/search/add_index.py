@@ -1,7 +1,8 @@
+from copy import copy
 from re import findall
 from django.utils.timezone import now
 
-from kiv_ir_indexer import index_data
+from indexers.kiv_ir_indexer import index_data
 from preprocessors.html_sanitizer import sanitize_for_html_tags
 from web_app.search.apps import SearchConfig
 
@@ -38,20 +39,32 @@ def _index_url(url_to_index: str):
             author = "ANONYMOUS_AUTHOR"
         text_content = SearchConfig.preprocessor. \
             filter_common_sentences_from_towards_data_science(' '.join(text_content))
-        l = SearchConfig.original_data
-        l.index  = l.index + 1
-        l.loc[-1] = [l.index,
-            title_hash,
-                  today_date,
-                  author,
-                  url_path,
-                  title,
-                  text_content]
+        original_data = SearchConfig.original_data
+        original_data.index = original_data.index + 1
+        original_data.loc[-1] = [original_data.index,
+                                 title_hash,
+                                 today_date,
+                                 author,
+                                 url_path,
+                                 title,
+                                 text_content]
 
-        SearchConfig.original_data = l
+        SearchConfig.original_data = original_data
 
         title = SearchConfig.preprocessor.preprocess_one_piece_of_text(title)
         text_content = SearchConfig.preprocessor.preprocess_one_piece_of_text(text_content)
 
-        index_data(text_content.split(" "), SearchConfig.indexed_contents)
-        index_data(title.split(" "), SearchConfig.indexed_titles)
+        preprocessed_data = SearchConfig.preprocessed_data
+        preprocessed_data.index = preprocessed_data.index + 1
+        preprocessed_data.loc[-1] = [preprocessed_data.index,
+                                     title_hash,
+                                     today_date,
+                                     author,
+                                     url_path,
+                                     title,
+                                     text_content]
+
+        SearchConfig.preprocessed_data = preprocessed_data
+
+        SearchConfig.indexed_titles = copy(index_data(SearchConfig.preprocessed_data["Title"]))
+        SearchConfig.indexed_contents = copy(index_data(SearchConfig.preprocessed_data["Content"]))
