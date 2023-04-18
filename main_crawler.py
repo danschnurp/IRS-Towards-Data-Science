@@ -16,7 +16,7 @@ if __name__ == '__main__':
                         default="./crawled_data/",
                         help='path to output dir where crawled_data directory is created...')
     parser.add_argument('-p', '--prepared_urls',
-                        default=False, type=bool,
+                        default=True, type=bool,
                         help='crawl prepared urls? True/False')
     args = parser.parse_args()
 

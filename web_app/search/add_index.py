@@ -48,27 +48,35 @@ def _index_url(url_to_index: str):
         preprocessed_data = pd.read_csv("preprocessed_data/preprocessed_" + INPUT_DATA,
                                         sep=";", header=0,
                                         low_memory=True)
+        preprocessed_data = preprocessed_data.to_dict()
+        original_data = original_data.to_dict()
 
-        original_data.index = original_data.index + 1
-        original_data.loc[-1] = [original_data.index.stop, original_data.index.stop - 1,
-                                 title_hash,
-                                 today_date,
-                                 author,
-                                 url_path,
-                                 title,
-                                 text_content]
+        del original_data["Unnamed: 0"]
+
+        original_data["hash"][len(original_data) - 1] = title_hash
+        original_data["Date"][len(original_data) - 1] = today_date
+        original_data["Author"][len(original_data) - 1] = author
+        original_data["Link"][len(original_data) - 1] = url_path
+        original_data["Title"][len(original_data) - 1] = title
+        original_data["Content"][len(original_data) - 1] = text_content
+
+        # pd.DataFrame(data=original_data
 
         title = preprocessor.preprocess_one_piece_of_text(title)
         text_content = preprocessor.preprocess_one_piece_of_text(text_content)
 
-        preprocessed_data.index = preprocessed_data.index + 1
-        preprocessed_data.loc[-1] = [preprocessed_data.index.stop, preprocessed_data.index.stop - 1,
-                                     title_hash,
-                                     today_date,
-                                     author,
-                                     url_path,
-                                     title,
-                                     text_content]
+        del preprocessed_data["Unnamed: 0"]
+
+        preprocessed_data["hash"][len(original_data) - 1] = title_hash
+        preprocessed_data["Date"][len(original_data) - 1] = today_date
+        preprocessed_data["Author"][len(original_data) - 1] = author
+        preprocessed_data["Link"][len(original_data) - 1] = url_path
+        preprocessed_data["Title"][len(original_data) - 1] = title
+        preprocessed_data["Content"][len(original_data) - 1] = text_content
+
+        original_data = pd.DataFrame(original_data)
+        preprocessed_data = pd.DataFrame(preprocessed_data)
+
         save_original_data(original_data)
         save_preprocessed_data(preprocessed_data)
 
