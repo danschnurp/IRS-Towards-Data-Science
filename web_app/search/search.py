@@ -41,7 +41,7 @@ def _search_by_query(query, search_by="Title", start_date="", end_date=""):
     docs_ids, _ = count_cosine_similarity(query, search_by, stem_query=True)
     results = []
     date_range = range(int(mktime(start_date.timetuple()) / 21600.),
-                       int(mktime(end_date.timetuple()) / 21600.))
+                       int(mktime(end_date.timetuple()) / 21600. + 1))
 
     original_data = pd.read_csv("preprocessed_data/" + INPUT_DATA,
                                 sep=";", header=0,
