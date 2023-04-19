@@ -57,7 +57,7 @@ def _search_by_query(query, search_by="Title", start_date="", end_date=""):
         row = original_data.iloc[i]
         # checks validity of ranges input dates and result date
         if Cast(parse_date(row["Date"]) - start_date, output_field=DurationField()).identity[1][1].days > 0 > \
-                Cast(parse_date(row["Date"]) - end_date, output_field=DurationField()).identity[1][1].days:
+                Cast(parse_date(row["Date"]) - end_date, output_field=DurationField()).identity[1][1].days - 1:
             results.append({"date": row["Date"], "title": row["Title"], "hash": row["hash"],
                             # adds first 300 chars of content
                             "content": row["Content"][:300] + "...",
