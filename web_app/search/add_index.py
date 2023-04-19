@@ -20,8 +20,7 @@ def _index_url(url_to_index: str):
     if len(sanitized) == 1:
         title, text_content = crawler.crawl_one_site(sanitized[0])
         if title == "failed":
-            # todo print user that it failed
-            print(sanitized[0], "failed")
+            return
         # The code is performing some preprocessing on the `text_content` and `title` variables before they are added to
         # the index.
         text_content = [i.replace("\n", " ") for i in text_content]
@@ -55,25 +54,25 @@ def _index_url(url_to_index: str):
         # dropping index value to avoid reproduction of this column
         del original_data["Unnamed: 0"]
 
-        # inserting data to dataset
-        original_data["hash"][len(original_data) - 1] = title_hash
-        original_data["Date"][len(original_data) - 1] = today_date
-        original_data["Author"][len(original_data) - 1] = author
-        original_data["Link"][len(original_data) - 1] = url_path
-        original_data["Title"][len(original_data) - 1] = title
-        original_data["Content"][len(original_data) - 1] = text_content
+        # inserting data to dataset the "+ 1" adds new entry, and it is quite hack
+        original_data["hash"][len(original_data["hash"]) + 1] = title_hash
+        original_data["Date"][len(original_data["hash"])] = today_date
+        original_data["Author"][len(original_data["hash"])] = author
+        original_data["Link"][len(original_data["hash"])] = url_path
+        original_data["Title"][len(original_data["hash"])] = title
+        original_data["Content"][len(original_data["hash"])] = text_content
 
         title = preprocessor.preprocess_one_piece_of_text(title)
         text_content = preprocessor.preprocess_one_piece_of_text(text_content)
         # dropping index value to avoid reproduction of this column
         del preprocessed_data["Unnamed: 0"]
         # inserting freshly preprocessed data to dataset
-        preprocessed_data["hash"][len(original_data) - 1] = title_hash
-        preprocessed_data["Date"][len(original_data) - 1] = today_date
-        preprocessed_data["Author"][len(original_data) - 1] = author
-        preprocessed_data["Link"][len(original_data) - 1] = url_path
-        preprocessed_data["Title"][len(original_data) - 1] = title
-        preprocessed_data["Content"][len(original_data) - 1] = text_content
+        preprocessed_data["hash"][len(original_data["hash"])] = title_hash
+        preprocessed_data["Date"][len(original_data["hash"])] = today_date
+        preprocessed_data["Author"][len(original_data["hash"])] = author
+        preprocessed_data["Link"][len(original_data["hash"])] = url_path
+        preprocessed_data["Title"][len(original_data["hash"])] = title
+        preprocessed_data["Content"][len(original_data["hash"])] = text_content
 
         original_data = pd.DataFrame(original_data)
         preprocessed_data = pd.DataFrame(preprocessed_data)
@@ -83,3 +82,4 @@ def _index_url(url_to_index: str):
         # update file based index
         save_titles(index_data(preprocessed_data["Title"]))
         save_contents(index_data(preprocessed_data["Content"]))
+        return 1

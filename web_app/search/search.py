@@ -62,4 +62,4 @@ def _search_by_query(query, search_by="Title", start_date="", end_date=""):
                             # adds first 300 chars of content
                             "content": row["Content"][:300] + "...",
                             "author": row["Author"], "link": row["Link"]})
-    return results if len(results) > 0 else ["not found"]
+    return results[:5] if len(results) > 0 else ["not found"]

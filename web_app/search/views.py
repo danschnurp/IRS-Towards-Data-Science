@@ -23,8 +23,11 @@ def indexer(request):
     """
     #  adds url to indexed sites
     if "index_url" in request.GET.keys():
+        indexed = 0
         if len(request.GET["index_url"]) > 0:
-            _index_url(request.GET["index_url"])
+            indexed = _index_url(request.GET["index_url"])
+        if indexed == 1:
+            return render(request, "search/index.html", None)
 
     results = _search_text(request)
     if len(results) > 0:

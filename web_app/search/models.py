@@ -1,4 +1,5 @@
 import json
+import os.path
 
 from django.db import models
 
@@ -26,10 +27,10 @@ def load_contents():
 
 
 def save_preprocessed_data(result):
-    result.to_csv("preprocessed_data/preprocessed_" + INPUT_DATA,
+    result.to_csv(os.path.abspath("preprocessed_data/preprocessed_" + INPUT_DATA),
                   sep=';', encoding='utf-8')
 
 
 def save_original_data(result):
-    result.to_csv("preprocessed_data/" + INPUT_DATA,
+    result.to_csv(os.path.abspath("preprocessed_data/" + INPUT_DATA),
                   sep=';', encoding='utf-8')
