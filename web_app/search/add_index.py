@@ -28,7 +28,7 @@ def _index_url(url_to_index: str):
         title = [i.replace("\n", " ") for i in title]
         text_content = [sanitize_for_html_tags(i) for i in text_content]
         title = [sanitize_for_html_tags(i) for i in title]
-
+        # preprocessing freshly crawled data
         url_path = sanitized[0].replace("\n", "")
         title_author = ' '.join(title).split("|")
         title_hash = str(hash(title_author[0]))
@@ -42,17 +42,20 @@ def _index_url(url_to_index: str):
         text_content = preprocessor. \
             filter_common_sentences_from_towards_data_science(' '.join(text_content))
 
+        # reading indexed dataset
         original_data = pd.read_csv("preprocessed_data/" + INPUT_DATA,
                                     sep=";", header=0,
                                     low_memory=True)
         preprocessed_data = pd.read_csv("preprocessed_data/preprocessed_" + INPUT_DATA,
                                         sep=";", header=0,
                                         low_memory=True)
+        # converting to dict <- pandas sucks
         preprocessed_data = preprocessed_data.to_dict()
         original_data = original_data.to_dict()
-
+        # dropping index value to avoid reproduction of this column
         del original_data["Unnamed: 0"]
 
+        # inserting data to dataset
         original_data["hash"][len(original_data) - 1] = title_hash
         original_data["Date"][len(original_data) - 1] = today_date
         original_data["Author"][len(original_data) - 1] = author
@@ -60,13 +63,11 @@ def _index_url(url_to_index: str):
         original_data["Title"][len(original_data) - 1] = title
         original_data["Content"][len(original_data) - 1] = text_content
 
-        # pd.DataFrame(data=original_data
-
         title = preprocessor.preprocess_one_piece_of_text(title)
         text_content = preprocessor.preprocess_one_piece_of_text(text_content)
-
+        # dropping index value to avoid reproduction of this column
         del preprocessed_data["Unnamed: 0"]
-
+        # inserting freshly preprocessed data to dataset
         preprocessed_data["hash"][len(original_data) - 1] = title_hash
         preprocessed_data["Date"][len(original_data) - 1] = today_date
         preprocessed_data["Author"][len(original_data) - 1] = author
@@ -79,6 +80,6 @@ def _index_url(url_to_index: str):
 
         save_original_data(original_data)
         save_preprocessed_data(preprocessed_data)
-
+        # update file based index
         save_titles(index_data(preprocessed_data["Title"]))
         save_contents(index_data(preprocessed_data["Content"]))
