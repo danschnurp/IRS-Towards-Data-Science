@@ -128,8 +128,10 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#  crawls websites and extract data from them.
 crawler = Crawler(output_dir="")
 
+# input data file for some data processing or analysis task.
 INPUT_DATA = "content2023_04_01_17_10.csv"
 
 # Checking if the venv folder is in the parent directory, and if the nltk_data folder is in the venv folder. If not,
