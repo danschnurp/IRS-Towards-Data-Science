@@ -50,6 +50,9 @@ def _search_text(request):
                 return _search_by_query(request.GET["search_text"], search_by="Content",
                                         start_date=request.GET["start_date"],
                                         end_date=request.GET["end_date"])
+            # todo 🤔
+            elif request.GET["search_by"] == "Booleans":
+                pass
             else:
                 return _search_by_query(request.GET["search_text"])
 

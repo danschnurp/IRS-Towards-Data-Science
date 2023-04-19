@@ -44,8 +44,6 @@ def _search_by_query(query, search_by="Title", start_date="", end_date=""):
     if Cast(end_date - start_date, output_field=DurationField()).identity[1][1].days < 0:
         start_date = parse_date('1972-01-01')
         end_date = now().today().date()
-    # safety input check
-    query = sanitize_for_html_tags(query)
 
     docs_ids, _ = count_cosine_similarity(query, search_by, stem_query=True)
     results = []

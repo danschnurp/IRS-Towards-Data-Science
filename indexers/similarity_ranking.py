@@ -22,6 +22,7 @@ def count_cosine_similarity(query: str, indexed_data: dict, stem_query=False):
     algorithms. If set to True, the query will be stemmed using a stemming algorithm before cosine similarity is calculated,
     defaults to False (optional)
     """
+    # safety input check
     query = sanitize_for_html_tags(query)
     if stem_query:
         query = preprocess_query(query)
