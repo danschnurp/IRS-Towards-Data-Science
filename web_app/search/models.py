@@ -17,7 +17,7 @@ def save_contents(indexed_content):
 
 
 def load_titles():
-    with open("indexed_data/contents.JSON") as f:
+    with open("indexed_data/titles.JSON") as f:
         return json.loads(f.read())
 
 

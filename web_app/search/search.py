@@ -4,8 +4,7 @@ import pandas as pd
 from django.db.models.functions import Cast
 from django.forms import DurationField
 
-from indexers.similarity_ranking import count_cosine_similarity
-from preprocessors.html_sanitizer import sanitize_for_html_tags
+from indexers.similarity_ranking import count_cosine_similarity, search_bool
 
 from django.utils.timezone import now
 from django.utils.dateparse import parse_date
@@ -14,7 +13,7 @@ from web_app.search.models import load_contents, load_titles
 from web_app.towards_data_science.settings import INPUT_DATA
 
 
-def _search_by_query(query, search_by="Title", start_date="", end_date=""):
+def _search_by_query(query, search_by="Title", search_by_bool=False, start_date="", end_date=""):
     """
     searches for data based on a specific search criteria.
 
@@ -44,8 +43,10 @@ def _search_by_query(query, search_by="Title", start_date="", end_date=""):
     if Cast(end_date - start_date, output_field=DurationField()).identity[1][1].days < 0:
         start_date = parse_date('1972-01-01')
         end_date = now().today().date()
-
-    docs_ids, _ = count_cosine_similarity(query, search_by, stem_query=True)
+    if search_by_bool:
+        docs_ids = search_bool(query, search_by)
+    else:
+        docs_ids, _ = count_cosine_similarity(query, search_by, stem_query=True)
     results = []
     # loads the original data to get view results
     original_data = pd.read_csv("preprocessed_data/" + INPUT_DATA,

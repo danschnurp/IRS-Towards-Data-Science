@@ -7,6 +7,33 @@ from preprocessors.html_sanitizer import sanitize_for_html_tags
 from preprocessors.nltk_preprocessor import preprocess_query
 
 
+def search_bool(query: str, indexed_data: dict):
+    """
+    This function takes a query string and a dictionary of indexed data as input and returns a doc ids containing all words
+
+    :param query: A string representing the search query that the user wants to perform
+    :type query: str
+    :param indexed_data: indexed_data is a dictionary that contains the indexed data that we want to search through
+    :type indexed_data: dict
+    """
+    # safety input check
+    query = sanitize_for_html_tags(query)
+    query = preprocess_query(query)
+    words = query.split(" ")
+    postings = []
+    results = []
+    # gets relevant postings
+    for word in words:
+        if word in indexed_data:
+            postings.append(indexed_data[word])
+    for posting in postings:
+        results += posting["doc_id"]
+    results = np.array(results)
+    unique, counts = np.unique(np.squeeze(results), return_counts=True)
+    results = unique[counts > 1]
+    return results
+
+
 def count_cosine_similarity(query: str, indexed_data: dict, stem_query=False):
     """
     This function takes a query string and a dictionary of indexed data, and calculates the cosine similarity between the
@@ -15,11 +42,9 @@ def count_cosine_similarity(query: str, indexed_data: dict, stem_query=False):
     :param query: A string representing the query for which cosine similarity needs to be calculated
     :type query: str
     :param indexed_data: The indexed_data parameter is a dictionary that contains the preprocessed and indexed data that we
-    want to search through. It typically contains the document IDs as keys and the corresponding preprocessed text as values
+    want to search through
     :type indexed_data: dict
-    :param stem_query: A boolean flag indicating whether to stem the query before calculating cosine similarity.
-    Stemming is the process of reducing words to their root form, which can help improve the accuracy of text matching
-    algorithms. If set to True, the query will be stemmed using a stemming algorithm before cosine similarity is calculated,
+    :param stem_query: A boolean flag indicating whether to stem the query before calculating cosine similarity
     defaults to False (optional)
     """
     # safety input check
