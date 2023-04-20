@@ -7,7 +7,6 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score, classification_report
-from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import MultinomialNB, GaussianNB
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import Pipeline
@@ -26,7 +25,6 @@ def train(max_examples_per_lang=1000):
     """
     X, y = load_data(max_examples_per_lang=max_examples_per_lang)
 
-    # TODO
     # split loaded data into training and testing parts with ratio 0.2
     # you can use train_test_split() function from sklearn.model_selection or write your own function
     ### START CODE HERE ### (≈ 1 line of code)
@@ -41,7 +39,6 @@ def train(max_examples_per_lang=1000):
     print("Training size:" + str(len(X_train)))
     print("Testing  size:" + str(len(X_test)))
 
-    # TODO
     # define vectorizer and classifier, use character n-grams and lowercasing
     # for vectorizer you can use TfidfVectorizer or CountVectorizer from sklearn.feature_extraction.text
     # for classifier use LogisticRegresssion, SVM (LinearSVC), MultinomialNB, MLPClassifier (MultiLayerPerceptron),
@@ -67,7 +64,7 @@ def train(max_examples_per_lang=1000):
     print('Model saved')
 
     # evaluate model
-    # evaluate_model(model, X_test, y_test)
+    evaluate_model(model, X_test, y_test)
 
 
 def evaluate_model_custom(model, X_test, y_test):
@@ -123,7 +120,6 @@ def predict(model, sentence, print_info=True):
 
     y_pred = model.predict([sentence])
 
-    # TODO
     # convert predicted class to label (0-> cs, 2->en) use label2lang dictionary from config.py
     ### START CODE HERE ### (≈ 1 line of code)
     label = label2lang[y_pred[0]]
@@ -201,7 +197,6 @@ def load_data(max_examples_per_lang=1000):
                                 names=col_names, encoding='utf-8', sep='\t', nrows=max_examples_per_lang)
                     for lang in languages), ignore_index=True)
 
-    # TODO
     # map text label to numbers  cs-> 0, en-> 1 ... use lang2label dictionary from config.py
     # and function map() from pandas
     ### START CODE HERE ### (≈ 1 line of code)
