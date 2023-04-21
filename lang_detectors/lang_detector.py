@@ -64,17 +64,15 @@ def train(max_examples_per_lang=1000):
     print('Model saved')
 
     # evaluate model
-    evaluate_model(model, X_test, y_test)
-    evaluate_model_custom(model, X_test, y_test)
+    y_pred = evaluate_model(model, X_test, y_test)
+    evaluate_model_custom(y_pred[-1], y_test, y_pred[-2])
 
 
-def evaluate_model_custom(model, X_test, y_test):
-    # predict classes for testing data
-    y_pred = model.predict(X_test)
-
+def evaluate_model_custom(y_pred, y_test, confusion_matrix_for_check):
     # TODO compute accuracy, confusion matrix, precisions, recalls, f1_scores for each class, and micro and macro f1 score
     ### START CODE HERE ###
     cm = compute_confusion_matrix(y_test, y_pred)
+    assert (confusion_matrix_for_check == cm).all()
     accuracy = None
     precisions = None
     recalls = None
@@ -86,28 +84,12 @@ def evaluate_model_custom(model, X_test, y_test):
 
 def compute_confusion_matrix(y_test, y_pred):
     matrix = np.zeros((len(label2lang), len(label2lang)))
-    m = 0
-    for i in label2lang:
-        for j in label2lang:
-            for k, l in zip(y_test, y_pred):
-                # todo condition to retrieve mismatches
-                m += 1
-            matrix[i, j] = m
-            m = 0
+
+    def increment(i, j):
+        matrix[i, j] += 1
+
+    [increment(i, j) for i, j in zip(y_test, y_pred)]
     return matrix
-
-
-#      t/p     cs    de    en    es    fr    it    pl    pt    ru    sk
-#        cs 182.0   1.0   2.0   0.0   2.0   1.0   0.0   0.0   0.0   3.0
-#        de   0.0 196.0   1.0   0.0   2.0   0.0   0.0   0.0   0.0   0.0
-#        en   0.0   0.0 203.0   0.0   2.0   0.0   0.0   0.0   0.0   0.0
-#        es   0.0   0.0   0.0 197.0   1.0   0.0   0.0   1.0   1.0   0.0
-#        fr   0.0   0.0   0.0   2.0 161.0   0.0   0.0   0.0   0.0   0.0
-#        it   0.0   0.0   0.0   0.0   0.0 205.0   0.0   0.0   0.0   0.0
-#        pl   1.0   1.0   2.0   1.0   4.0   1.0 199.0   0.0   0.0   0.0
-#        pt   0.0   0.0   0.0   2.0   0.0   0.0   0.0 215.0   0.0   1.0
-#        ru   0.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 202.0   0.0
-#        sk   0.0   1.0   0.0   0.0   0.0   0.0   0.0   0.0   0.0 207.0
 
 
 def test_model(model_name):
@@ -203,7 +185,7 @@ def evaluate_model(model, X_test, y_test, print_stats=True, print_misclassified=
         if plot_confusion is True:
             plot_cm(cm, labels=languages)
 
-    return accuracy, macro_f1, micro_f1, precisions, recalls, f1_scores
+    return accuracy, macro_f1, micro_f1, precisions, recalls, f1_scores, cm, y_pred
 
 
 def load_data(max_examples_per_lang=1000):
