@@ -73,10 +73,10 @@ def evaluate_model_custom(y_pred, y_test, confusion_matrix_for_check):
     ### START CODE HERE ###
     cm = compute_confusion_matrix(y_test, y_pred)
     assert (confusion_matrix_for_check == cm).all()
-    accuracy = None
-    precisions = None
-    recalls = None
-    f1_scores = None
+    accuracy = np.sum(np.diagonal(cm)) / len(y_test)
+    precisions = [i[index] / (i[index] + np.sum(i[index+1:])) for index, i in enumerate(cm.T)]
+    recalls = [i[index] / (i[index] + np.sum(i[index+1:])) for index, i in enumerate(cm)]
+    f1_scores = [2 * ((i * j) / (i + j)) for i, j in zip(precisions, recalls)]
     macro_f1 = None
     micro_f1 = None
     ### END CODE HERE ###
