@@ -69,7 +69,7 @@ def train(max_examples_per_lang=1000):
 
 
 def evaluate_model_custom(y_pred, y_test, confusion_matrix_for_check):
-    # TODO compute accuracy, confusion matrix, precisions, recalls, f1_scores for each class, and micro and macro f1 score
+    # TODO compute micro and macro f1 score
     ### START CODE HERE ###
     cm = compute_confusion_matrix(y_test, y_pred)
     assert (confusion_matrix_for_check == cm).all()
