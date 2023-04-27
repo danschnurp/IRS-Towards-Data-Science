@@ -11,8 +11,6 @@
 
 - usage: `python ./web_app/manage.py runserver`
 
-**in progress**
-
 ![alt text](imgs/index_ui.png)
 
 
