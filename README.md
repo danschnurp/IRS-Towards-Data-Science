@@ -13,7 +13,7 @@
 
 **in progress**
 
-![alt text](imgs/usecase.gif)
+![alt text](imgs/index_ui.png)
 
 
 
