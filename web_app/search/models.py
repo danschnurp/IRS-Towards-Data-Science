@@ -1,3 +1,6 @@
+#  date: 20. 4. 2023
+#  author: Daniel Schnurpfeil
+
 import json
 import os.path
 

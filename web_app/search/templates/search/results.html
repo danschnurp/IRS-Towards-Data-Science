@@ -20,7 +20,7 @@
         aria-expanded="false"
         aria-controls="{{result.hash}}"
       >
-        <strong> {{result.title}} </strong>
+          <a href="{{result.link}}"> <div> <strong> {{result.title}}</strong> </div> </a>
       </button>
     </h2>
     <div
@@ -30,7 +30,6 @@
       data-bs-parent="{{result.hash}}123"
     >
       <div class="accordion-body">
-        <p><a href="{{result.link}}">{{result.link}}</a></p>
 
         <p>{{result.content}}</p>
         by &nbsp;<strong>  {{result.author}}</strong>,&nbsp;<strong> {{result.date}} </strong>

@@ -1,3 +1,6 @@
+#  date: 20. 4. 2023
+#  author: Daniel Schnurpfeil
+
 from django.shortcuts import render
 
 from search.add_index import _index_url

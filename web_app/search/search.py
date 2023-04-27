@@ -1,8 +1,10 @@
-from time import mktime
+#  date: 20. 4. 2023
+#  author: Daniel Schnurpfeil
 
 import pandas as pd
 from django.db.models.functions import Cast
 from django.forms import DurationField
+from django.utils.safestring import mark_safe
 
 from indexers.similarity_ranking import count_cosine_similarity, search_bool
 
@@ -57,8 +59,20 @@ def _search_by_query(query, search_by="Title", search_by_bool=False, start_date=
         # checks validity of ranges input dates and result date
         if Cast(parse_date(row["Date"]) - start_date, output_field=DurationField()).identity[1][1].days > 0 > \
                 Cast(parse_date(row["Date"]) - end_date, output_field=DurationField()).identity[1][1].days - 1:
-            results.append({"date": row["Date"], "title": row["Title"], "hash": row["hash"],
+            words = query.split(" ")
+            words = [word.lower() for word in words if len(word) > 0]
+            highlighted_content = ['<mark>' + word_content + '</mark>'
+                                   if word_content in words
+                                   else word_content
+                                   for word_content in row["Content"][:500].split(" ")]
+            highlighted_title = ['<mark>' + word_title + '</mark>'
+                                 if word_title.lower() in words
+                                 else word_title
+                                 for word_title in row["Title"].split(" ")]
+
+            results.append({"date": row["Date"], "title": mark_safe(" ".join(highlighted_title) + ""),
+                            "hash": row["hash"],
                             # adds first 300 chars of content
-                            "content": row["Content"][:300] + "...",
+                            "content": mark_safe(" ".join(highlighted_content) + "..."),
                             "author": row["Author"], "link": row["Link"]})
     return results[:5] if len(results) > 0 else ["not found"]

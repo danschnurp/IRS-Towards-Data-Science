@@ -1,3 +1,6 @@
+#  date: 20. 4. 2023
+#  author: Daniel Schnurpfeil
+
 from re import findall
 
 import pandas as pd
