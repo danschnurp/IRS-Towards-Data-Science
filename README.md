@@ -2,13 +2,11 @@
 
 
 
-- before start:
-`pip install -r requirements.txt`
-
 ## Components
 
 ### Web Application 
-
+- before start:
+`pip install -r requirements.txt`
 - usage: `python ./web_app/manage.py runserver`
 
 - usage with docker:
