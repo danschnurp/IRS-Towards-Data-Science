@@ -1,6 +1,18 @@
 #  date: 3. 3. 2023
 #  author: Daniel Schnurpfeil
 #
+
+import spacy
+
+nlp = spacy.load("en_core_web_sm")
+
+# Get the stemmer
+stemmer = nlp.vocab.morphology.lemmatizer
+
+# Get the stopwords
+stopwords = nlp.Defaults.stop_words
+
+
 import os
 import sys
 
