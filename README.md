@@ -11,6 +11,13 @@
 
 - usage: `python ./web_app/manage.py runserver`
 
+- usage with docker:
+  -  download *nltk_data, preprocessed_data and indexed data* folders to root poject directory (extract them) from my onedrive: [here](https://onedrive.live.com/?authkey=%21AEi6buOuVgTO4QE&id=8D9B8AAC1B2B5597%2185066&cid=8D9B8AAC1B2B5597)
+  -  then run:
+   ```
+  docker-compose up
+  ``` 
+
 ![alt text](imgs/index_ui.png)
 
 
