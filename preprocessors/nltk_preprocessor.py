@@ -31,8 +31,8 @@ def download_nltk():
         else:
             ssl._create_default_https_context = _create_unverified_https_context
         # Downloading the stopwords and punkt packages from nltk.
-        nltk.download("stopwords", download_dir="./venv/nltk_data")
-        nltk.download("punkt", download_dir="./venv/nltk_data")
+        nltk.download("stopwords", download_dir="/usr/local/lib/nltk_data")
+        nltk.download("punkt", download_dir="/usr/local/lib/nltk_data")
 
 
 def preprocess_query(sentence: str,
