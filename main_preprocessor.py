@@ -7,32 +7,9 @@ import time
 from utils import make_output_dir
 
 
-def download_nltk():
-    """
-    If the venv folder is in the parent directory, and the nltk_data folder is in the venv folder, download the stopwords
-    and punkt packages from nltk
-    """
-    # Checking if the venv folder is in the parent directory.
-    if "venv" not in os.listdir("./"):
-        raise "NO venv dir found!"
-    # Checking if the nltk_data folder is in the venv folder.
-    if "nltk_data" not in os.listdir("./venv/"):
-        import nltk
-        import ssl
-
-        try:
-            _create_unverified_https_context = ssl._create_unverified_context
-        except AttributeError:
-            pass
-        else:
-            ssl._create_default_https_context = _create_unverified_https_context
-        # Downloading the stopwords and punkt packages from nltk.
-        nltk.download("stopwords", download_dir="./venv/nltk_data")
-        nltk.download("punkt", download_dir="./venv/nltk_data")
-
 
 if __name__ == '__main__':
-    from preprocessors.nltk_preprocessor import NltkPreprocessor
+    from preprocessors.nltk_preprocessor import NltkPreprocessor, download_nltk
     import argparse
 
     parser = argparse.ArgumentParser(description='preprocessor using NLTK lib')

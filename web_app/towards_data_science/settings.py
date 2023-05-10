@@ -13,11 +13,11 @@ import json
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import nltk
 import pandas as pd
 
 from crawlers.crawler import Crawler
-from main_preprocessor import download_nltk
-from preprocessors.nltk_preprocessor import NltkPreprocessor
+from preprocessors.nltk_preprocessor import NltkPreprocessor, download_nltk
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -137,6 +137,7 @@ INPUT_DATA = "content2023_04_01_17_10.csv"
 # Checking if the venv folder is in the parent directory, and if the nltk_data folder is in the venv folder. If not,
 # it downloads the stopwords and punkt packages from nltk.
 download_nltk()
+nltk.data.path.append('./venv/nltk_data')
 
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer

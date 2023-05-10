@@ -33,7 +33,7 @@ def _index_url(url_to_index: str):
         # preprocessing freshly crawled data
         url_path = sanitized[0].replace("\n", "")
         title_author = ' '.join(title).split("|")
-        title_hash = str(hash(title_author[0]))
+        title_hash = int(hash(' '.join(title)))
         today_date = now().today().date()
         title = preprocessor.filter_common_title_parts_from_towards_data_science(title_author[0])
         author = title_author[1]
@@ -56,6 +56,9 @@ def _index_url(url_to_index: str):
         original_data = original_data.to_dict()
         # dropping index value to avoid reproduction of this column
         del original_data["Unnamed: 0"]
+
+        if title_hash in list(preprocessed_data["hash"].values()):
+            return 1
 
         # inserting data to dataset the "+ 1" adds new entry, and it is quite hack
         original_data["hash"][len(original_data["hash"]) + 1] = title_hash

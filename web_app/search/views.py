@@ -6,6 +6,8 @@ from django.shortcuts import render
 from search.add_index import _index_url
 from search.search import _search_by_query
 
+from web_app.search.apps import SearchConfig
+
 
 def index(request):
     results = _search_text(request)
@@ -28,8 +30,10 @@ def indexer(request):
     #  adds url to indexed sites
     if "index_url" in request.GET.keys():
         indexed = 0
-        if len(request.GET["index_url"]) > 0:
+        if len(request.GET["index_url"]) > 0 and not SearchConfig.indexer_runs:
+            SearchConfig.indexer_runs = True
             indexed = _index_url(request.GET["index_url"])
+            SearchConfig.indexer_runs = False
         if indexed == 1:
             return render(request, "search/index.html", None)
 

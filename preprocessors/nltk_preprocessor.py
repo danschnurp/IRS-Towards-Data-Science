@@ -1,6 +1,7 @@
 #  date: 3. 3. 2023
 #  author: Daniel Schnurpfeil
 #
+import os
 import sys
 
 import numpy as np
@@ -8,6 +9,30 @@ import pandas as pd
 from nltk import PorterStemmer
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
+
+
+def download_nltk():
+    """
+    If the venv folder is in the parent directory, and the nltk_data folder is in the venv folder, download the stopwords
+    and punkt packages from nltk
+    """
+    # Checking if the venv folder is in the parent directory.
+    if "venv" not in os.listdir("./"):
+        raise "NO venv dir found!"
+    # Checking if the nltk_data folder is in the venv folder.
+    if "nltk_data" not in os.listdir("./venv/"):
+        import nltk
+        import ssl
+
+        try:
+            _create_unverified_https_context = ssl._create_unverified_context
+        except AttributeError:
+            pass
+        else:
+            ssl._create_default_https_context = _create_unverified_https_context
+        # Downloading the stopwords and punkt packages from nltk.
+        nltk.download("stopwords", download_dir="./venv/nltk_data")
+        nltk.download("punkt", download_dir="./venv/nltk_data")
 
 
 def preprocess_query(sentence: str,
