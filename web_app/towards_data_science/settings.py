@@ -136,8 +136,7 @@ INPUT_DATA = "content2023_04_01_17_10.csv"
 
 # Checking if the venv folder is in the parent directory, and if the nltk_data folder is in the venv folder. If not,
 # it downloads the stopwords and punkt packages from nltk.
-download_nltk()
-nltk.data.path.append('./venv/nltk_data')
+# download_nltk()
 
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer

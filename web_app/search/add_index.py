@@ -8,8 +8,8 @@ from django.utils.timezone import now
 
 from indexers.kiv_ir_indexer import index_data
 from preprocessors.html_sanitizer import sanitize_for_html_tags
-from web_app.search.models import save_titles, save_contents, save_original_data, save_preprocessed_data
-from web_app.towards_data_science.settings import preprocessor, crawler, INPUT_DATA
+from search.models import save_titles, save_contents, save_original_data, save_preprocessed_data
+from towards_data_science.settings import preprocessor, crawler, INPUT_DATA
 
 
 def _index_url(url_to_index: str):
