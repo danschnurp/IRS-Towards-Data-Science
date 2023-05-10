@@ -5,8 +5,8 @@ FROM python:3.10
 RUN mkdir /usr/local/nltk_data/
 RUN mkdir /usr/local/nltk_data/corpora
 RUN mkdir /usr/local/nltk_data/corpora/stopwords
-RUN wget -O english https://public.am.files.1drv.com/y4mwzxuZK4jxNsKTUPWvUwP5P-u7wIfoN6V7NMaURKIdAXeO1Z_tepSsktej0Ctw-oRkB_K_YqcivixgZb9HPQbmFtv7s0XD4w2GkfVYpLUL35gnq9tdx0kxde_rcqZejKqMRzUMBkJ8MbVFowHzDPjhhkaWmnW4SG2iwAo88zws_PdbWlvSYAE96iVP-DZJalXEPKBJKrlWtW6mwKZ43ZYMsW0yWJqshBc93CRH3zKt6Q?AVOverride=1
-RUN mv english usr/local/nltk_data/corpora/stopwords/english
+COPY ./venv/nltk_data/corpora/stopwords/english /usr/local/nltk_data/corpora/stopwords/english
+COPY ./venv/nltk_data/tokenizers/punkt/PY3/english.pickle usr/local/nltk_data/tokenizers/punkt/PY3/english.pickle
 
 WORKDIR /usr/src
 
@@ -23,10 +23,15 @@ RUN apt-get update && \
 RUN mkdir ./indexed_data
 RUN mkdir ./preprocessed_data
 
-RUN wget -O ./indexed_data/contents.JSON https://1drv.ms/u/s!ApdVKxusipuNhZkqFonAK0yak5FT4Q?e=qPla2D
-RUN wget -O ./indexed_data/titles.JSON https://1drv.ms/u/s!ApdVKxusipuNhZkpjEkfJJ1MSac3Tg?e=gPsnc4
-RUN wget -O ./preprocessed_data/content2023_04_01_17_10.csv https://1drv.ms/u/s!ApdVKxusipuNhZheMwQ5p8jk0JPmYA?e=6snJms
-RUN wget -O ./preprocessed_data/preprocessed_content2023_04_01_17_10.csv https://1drv.ms/u/s!ApdVKxusipuNhZhbKM3uVPL1YJ6mWw?e=EYRJei
+
+COPY ./indexed_data/contents.JSON ./indexed_data/contents.JSON
+COPY ./indexed_data/titles.JSON ./indexed_data/titles.JSON
+COPY ./preprocessed_data/preprocessed_content2023_04_01_17_10.csv ./preprocessed_data/preprocessed_content2023_04_01_17_10.csv
+COPY ./preprocessed_data/content2023_04_01_17_10.csv ./preprocessed_data/content2023_04_01_17_10.csv
+
+RUN chmod -R 777  ./indexed_data
+RUN chmod -R 777 ./preprocessed_data
+
 RUN rm -rf /var/lib/apt/lists/*
 
 RUN pip install virtualenv

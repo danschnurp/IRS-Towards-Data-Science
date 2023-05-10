@@ -3,10 +3,8 @@
 
 from django.shortcuts import render
 
-from search.add_index import _index_url
-from search.search import _search_by_query
-
-from web_app.search.apps import SearchConfig
+from search.apps import SearchConfig
+from search.models import index_url, search_by_query
 
 
 def index(request):
@@ -32,7 +30,7 @@ def indexer(request):
         indexed = 0
         if len(request.GET["index_url"]) > 0 and not SearchConfig.indexer_runs:
             SearchConfig.indexer_runs = True
-            indexed = _index_url(request.GET["index_url"])
+            indexed = index_url(request.GET["index_url"])
             SearchConfig.indexer_runs = False
         if indexed == 1:
             return render(request, "search/index.html", None)
@@ -63,20 +61,17 @@ def _search_text(request):
                     end_date = request.GET["end_date"]
                 # searches by contents
                 if request.GET["search_by"] == "Contents":
-                    return _search_by_query(request.GET["search_text"], search_by="Content",
-                                            start_date=start_date,
-                                            end_date=end_date)
+                    return search_by_query(request.GET["search_text"], search_by="Content", start_date=start_date,
+                                           end_date=end_date)
                 # searches by titles
                 elif request.GET["search_by"] == "Titles":
-                    return _search_by_query(request.GET["search_text"],
-                                            start_date=start_date,
-                                            end_date=end_date)
+                    return search_by_query(request.GET["search_text"], start_date=start_date, end_date=end_date)
                 # searches by bools (AND)
                 elif request.GET["search_by"] == "Bools":
-                    return _search_by_query(request.GET["search_text"], search_by_bool=True, start_date=start_date,
-                                            end_date=end_date)
+                    return search_by_query(request.GET["search_text"], search_by_bool=True, start_date=start_date,
+                                           end_date=end_date)
                 else:
-                    return _search_by_query(request.GET["search_text"])
+                    return search_by_query(request.GET["search_text"])
 
         else:
             return []

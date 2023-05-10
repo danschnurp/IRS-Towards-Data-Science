@@ -9,12 +9,10 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-import json
+
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import nltk
-import pandas as pd
 
 from crawlers.crawler import Crawler
 from preprocessors.nltk_preprocessor import NltkPreprocessor, download_nltk
@@ -127,23 +125,3 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-#  crawls websites and extract data from them.
-crawler = Crawler(output_dir="")
-
-# input data file for some data processing or analysis task.
-INPUT_DATA = "content2023_04_01_17_10.csv"
-
-# Checking if the venv folder is in the parent directory, and if the nltk_data folder is in the venv folder. If not,
-# it downloads the stopwords and punkt packages from nltk.
-# download_nltk()
-
-from nltk.corpus import stopwords
-from nltk.stem import PorterStemmer
-
-# Creating a list of stop words and a stemmer.
-stop_words = stopwords.words('english')
-ps = PorterStemmer()
-
-# Creating an instance of the NltkPreprocessor class.
-preprocessor = NltkPreprocessor("", stop_words, ps, make_csv_only=False)
