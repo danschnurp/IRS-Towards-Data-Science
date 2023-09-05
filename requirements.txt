@@ -1,7 +1,7 @@
-Django~=4.2.2
-beautifulsoup4~=4.12.2
-lxml~=4.9.2
-requests~=2.31.0
-nltk~=3.8.1
-pandas~=2.0
-numpy~=1.24.3
+Django
+beautifulsoup4
+lxml
+requests
+nltk
+pandas
+numpy
